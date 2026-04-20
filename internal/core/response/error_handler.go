@@ -35,6 +35,14 @@ func GlobalErrorHandler() gin.HandlerFunc {
 				return
 			}
 
+			// 2.1 Handle Custom ConflictError
+			var conflictErr exception.ConflictError
+			if errors.As(err, &conflictErr) {
+				SendError(c, Conflict, conflictErr.Error())
+				c.Abort()
+				return
+			}
+
 			// 3. Handle Binding/Validation Errors (400)
 
 			// Case: Empty Body (EOF)

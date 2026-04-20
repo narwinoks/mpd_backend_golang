@@ -2,7 +2,7 @@ package user
 
 import (
 	"backend-app/internal/core/exception"
-	"backend-app/internal/modules/master/model"
+	"backend-app/internal/modules/master/model/user"
 	repo "backend-app/internal/modules/master/repository/user"
 	req "backend-app/internal/modules/master/request/user"
 	res "backend-app/internal/modules/master/response/user"
@@ -24,7 +24,7 @@ func (s *userServiceImpl) GetAllUsers() ([]res.UserResponse, error) {
 
 	// Requirement: Treat empty array as 404
 	if len(users) == 0 {
-		return nil, exception.NewNotFoundError("Data user belum ada di dalam sistem")
+		return nil, exception.NewNotFoundError("Data Not Found")
 	}
 
 	return res.FromUsers(users), nil
@@ -44,7 +44,36 @@ func (s *userServiceImpl) GetUserByID(id uint) (*res.UserResponse, error) {
 }
 
 func (s *userServiceImpl) CreateUser(r *req.UserCreateRequest) (*res.UserResponse, error) {
-	newUser := &model.User{
+	// 1. Check Username
+	existUsername, err := s.userRepo.FindByUsername(r.Username)
+	if err != nil {
+		return nil, err
+	}
+	if existUsername {
+		return nil, exception.NewConflictError("Username sudah terdaftar di sistem")
+	}
+
+	// 2. Check Email
+	existEmail, err := s.userRepo.FindByEmail(r.Email)
+	if err != nil {
+		return nil, err
+	}
+	if existEmail {
+		return nil, exception.NewConflictError("Email sudah terdaftar di sistem")
+	}
+
+	// 3. Check NIP (if provided)
+	if r.NIP != "" {
+		existNIP, err := s.userRepo.FindByNIP(r.NIP)
+		if err != nil {
+			return nil, err
+		}
+		if existNIP {
+			return nil, exception.NewConflictError("NIP sudah terdaftar di sistem")
+		}
+	}
+
+	newUser := &user.User{
 		Username: r.Username,
 		Email:    r.Email,
 		Password: r.Password,

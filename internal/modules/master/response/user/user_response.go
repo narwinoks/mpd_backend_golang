@@ -1,7 +1,7 @@
 package user
 
 import (
-	"backend-app/internal/modules/master/model"
+	"backend-app/internal/modules/master/model/user"
 	"time"
 )
 
@@ -17,7 +17,7 @@ type UserResponse struct {
 	CreatedAt time.Time  `json:"created_at"`
 }
 
-func FromUser(u *model.User) *UserResponse {
+func FromUser(u *user.User) *UserResponse {
 	if u == nil {
 		return nil
 	}
@@ -34,7 +34,7 @@ func FromUser(u *model.User) *UserResponse {
 	}
 }
 
-func FromUsers(users []model.User) []UserResponse {
+func FromUsers(users []user.User) []UserResponse {
 	var res []UserResponse
 	for _, u := range users {
 		res = append(res, *FromUser(&u))
