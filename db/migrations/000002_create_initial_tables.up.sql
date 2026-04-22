@@ -476,3 +476,28 @@ ALTER TABLE role_permission_m ADD CONSTRAINT fk_role_permission_m_role_id FOREIG
 ALTER TABLE role_permission_m ADD CONSTRAINT fk_role_permission_m_permission_id FOREIGN KEY (permission_id) REFERENCES app_permission_m(id) ON DELETE SET NULL;
 ALTER TABLE user_permission_m ADD CONSTRAINT fk_user_permission_m_user_id FOREIGN KEY (user_id) REFERENCES users_m(id) ON DELETE SET NULL;
 ALTER TABLE user_permission_m ADD CONSTRAINT fk_user_permission_m_permission_id FOREIGN KEY (permission_id) REFERENCES app_permission_m(id) ON DELETE SET NULL;
+
+-- Profile ID References
+ALTER TABLE religions_m ADD CONSTRAINT fk_religions_m_profile_id FOREIGN KEY (profile_id) REFERENCES profiles_m(id) ON DELETE SET NULL;
+ALTER TABLE profiles_m ADD CONSTRAINT fk_profiles_m_profile_id FOREIGN KEY (profile_id) REFERENCES profiles_m(id) ON DELETE SET NULL;
+ALTER TABLE provinces_m ADD CONSTRAINT fk_provinces_m_profile_id FOREIGN KEY (profile_id) REFERENCES profiles_m(id) ON DELETE SET NULL;
+ALTER TABLE cities_m ADD CONSTRAINT fk_cities_m_profile_id FOREIGN KEY (profile_id) REFERENCES profiles_m(id) ON DELETE SET NULL;
+ALTER TABLE subdistrict_m ADD CONSTRAINT fk_subdistrict_m_profile_id FOREIGN KEY (profile_id) REFERENCES profiles_m(id) ON DELETE SET NULL;
+ALTER TABLE genders_m ADD CONSTRAINT fk_genders_m_profile_id FOREIGN KEY (profile_id) REFERENCES profiles_m(id) ON DELETE SET NULL;
+ALTER TABLE job_categories_m ADD CONSTRAINT fk_job_categories_m_profile_id FOREIGN KEY (profile_id) REFERENCES profiles_m(id) ON DELETE SET NULL;
+ALTER TABLE job_titles_m ADD CONSTRAINT fk_job_titles_m_profile_id FOREIGN KEY (profile_id) REFERENCES profiles_m(id) ON DELETE SET NULL;
+ALTER TABLE employment_statuses_m ADD CONSTRAINT fk_employment_statuses_m_profile_id FOREIGN KEY (profile_id) REFERENCES profiles_m(id) ON DELETE SET NULL;
+ALTER TABLE marital_status_m ADD CONSTRAINT fk_marital_status_m_profile_id FOREIGN KEY (profile_id) REFERENCES profiles_m(id) ON DELETE SET NULL;
+ALTER TABLE employee_group_m ADD CONSTRAINT fk_employee_group_m_profile_id FOREIGN KEY (profile_id) REFERENCES profiles_m(id) ON DELETE SET NULL;
+ALTER TABLE positions_m ADD CONSTRAINT fk_positions_m_profile_id FOREIGN KEY (profile_id) REFERENCES profiles_m(id) ON DELETE SET NULL;
+ALTER TABLE employees_m ADD CONSTRAINT fk_employees_m_profile_id FOREIGN KEY (profile_id) REFERENCES profiles_m(id) ON DELETE SET NULL;
+ALTER TABLE employee_details_m ADD CONSTRAINT fk_employee_details_m_profile_id FOREIGN KEY (profile_id) REFERENCES profiles_m(id) ON DELETE SET NULL;
+ALTER TABLE roles_m ADD CONSTRAINT fk_roles_m_profile_id FOREIGN KEY (profile_id) REFERENCES profiles_m(id) ON DELETE SET NULL;
+ALTER TABLE users_m ADD CONSTRAINT fk_users_m_profile_id FOREIGN KEY (profile_id) REFERENCES profiles_m(id) ON DELETE SET NULL;
+ALTER TABLE app_modules_m ADD CONSTRAINT fk_app_modules_m_profile_id FOREIGN KEY (profile_id) REFERENCES profiles_m(id) ON DELETE SET NULL;
+ALTER TABLE app_menus_m ADD CONSTRAINT fk_app_menus_m_profile_id FOREIGN KEY (profile_id) REFERENCES profiles_m(id) ON DELETE SET NULL;
+ALTER TABLE role_modules_m ADD CONSTRAINT fk_role_modules_m_profile_id FOREIGN KEY (profile_id) REFERENCES profiles_m(id) ON DELETE SET NULL;
+ALTER TABLE user_modules_m ADD CONSTRAINT fk_user_modules_m_profile_id FOREIGN KEY (profile_id) REFERENCES profiles_m(id) ON DELETE SET NULL;
+ALTER TABLE app_permission_m ADD CONSTRAINT fk_app_permission_m_profile_id FOREIGN KEY (profile_id) REFERENCES profiles_m(id) ON DELETE SET NULL;
+ALTER TABLE role_permission_m ADD CONSTRAINT fk_role_permission_m_profile_id FOREIGN KEY (profile_id) REFERENCES profiles_m(id) ON DELETE SET NULL;
+ALTER TABLE user_permission_m ADD CONSTRAINT fk_user_permission_m_profile_id FOREIGN KEY (profile_id) REFERENCES profiles_m(id) ON DELETE SET NULL;
