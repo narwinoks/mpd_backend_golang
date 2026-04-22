@@ -52,10 +52,15 @@ database:
   sslmode: "disable"
 ```
 
-### 3. Database Migration
+### 3. Database Migration & Seeding
 Run the following command to create the initial tables:
 ```bash
 migrate -path db/migrations -database "postgres://postgres:password@localhost:5432/simrs_db?sslmode=disable" up
+```
+
+To seed the database with initial/dummy data:
+```bash
+go run cmd/seeder/main.go
 ```
 
 ### 4. Dependency Injection

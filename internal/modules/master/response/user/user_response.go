@@ -1,23 +1,20 @@
 package user
 
 import (
-	"backend-app/internal/modules/master/model/user"
+	"backend-app/internal/modules/auth/models"
 	"time"
 )
 
 type UserResponse struct {
-	ID        uint       `json:"id"`
-	Username  string     `json:"username"`
-	Email     string     `json:"email"`
-	FullName  string     `json:"full_name"`
-	NIP       string     `json:"nip"`
-	Role      string     `json:"role"`
-	IsActive  bool       `json:"is_active"`
-	LastLogin *time.Time `json:"last_login"`
-	CreatedAt time.Time  `json:"created_at"`
+	ID        uint32    `json:"id"`
+	Username  string    `json:"username"`
+	Email     string    `json:"email"`
+	RoleID    uint32    `json:"role_id"`
+	IsActive  bool      `json:"is_active"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
-func FromUser(u *user.User) *UserResponse {
+func FromUser(u *models.User) *UserResponse {
 	if u == nil {
 		return nil
 	}
@@ -25,16 +22,13 @@ func FromUser(u *user.User) *UserResponse {
 		ID:        u.ID,
 		Username:  u.Username,
 		Email:     u.Email,
-		FullName:  u.FullName,
-		NIP:       u.NIP,
-		Role:      u.Role,
+		RoleID:    u.RoleID,
 		IsActive:  u.IsActive,
-		LastLogin: u.LastLogin,
 		CreatedAt: u.CreatedAt,
 	}
 }
 
-func FromUsers(users []user.User) []UserResponse {
+func FromUsers(users []models.User) []UserResponse {
 	var res []UserResponse
 	for _, u := range users {
 		res = append(res, *FromUser(&u))

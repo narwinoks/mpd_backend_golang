@@ -3,6 +3,7 @@ module backend-app
 go 1.25.1
 
 require (
+	github.com/brianvoe/gofakeit/v6 v6.28.0
 	github.com/gin-gonic/gin v1.12.0
 	github.com/go-playground/validator/v10 v10.30.1
 	github.com/google/wire v0.7.0
