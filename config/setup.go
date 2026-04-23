@@ -2,10 +2,13 @@ package config
 
 import (
 	"fmt"
+	"io"
+	"os"
 	"strings"
 
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 type Config struct {
@@ -59,5 +62,28 @@ func SetupLog(cfg *LogConfig) {
 		level = logrus.InfoLevel
 	}
 	logrus.SetLevel(level)
-	logrus.SetFormatter(&logrus.JSONFormatter{})
+	logrus.SetFormatter(&logrus.JSONFormatter{
+		TimestampFormat: "2006-01-02T15:04:05Z",
+		FieldMap: logrus.FieldMap{
+			logrus.FieldKeyMsg: "message",
+		},
+	})
+
+	// Create storage directory if not exists
+	if _, err := os.Stat("./storage"); os.IsNotExist(err) {
+		_ = os.Mkdir("./storage", 0755)
+	}
+
+	// Setup Lumberjack for log rotation
+	logWriter := &lumberjack.Logger{
+		Filename:   "./storage/mpd.log",
+		MaxSize:    50, // megabytes
+		MaxBackups: 30,
+		MaxAge:     28,   //days
+		Compress:   true, // disabled by default
+	}
+
+	// Output to both stdout and file
+	multiWriter := io.MultiWriter(os.Stdout, logWriter)
+	logrus.SetOutput(multiWriter)
 }

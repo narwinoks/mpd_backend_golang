@@ -3,6 +3,7 @@ package main
 import (
 	"backend-app/config"
 	"backend-app/internal/core/database"
+	"backend-app/internal/core/middleware"
 	"backend-app/internal/core/response"
 	"backend-app/internal/modules/master"
 	"fmt"
@@ -31,9 +32,11 @@ func main() {
 	masterRouter := master.InitializeMasterRouter(cfg, db)
 
 	// 5. Setup Gin
-	r := gin.Default()
+	r := gin.New()
+	r.Use(gin.Recovery())
 
 	// 6. Global Middleware
+	r.Use(middleware.LoggerMiddleware())
 	r.Use(response.GlobalErrorHandler())
 
 	// 7. Register Routes
