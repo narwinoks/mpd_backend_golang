@@ -1,4 +1,4 @@
-CREATE TABLE village_m (
+CREATE TABLE villages_m (
      id SERIAL PRIMARY KEY,
      uuid CHAR(36) NOT NULL,
      is_active BOOLEAN DEFAULT TRUE,
@@ -11,7 +11,8 @@ CREATE TABLE village_m (
      updated_by INTEGER,
      deleted_by INTEGER,
      subdistrict_id INTEGER,
-     province_id  INTEGER
+     province_id  INTEGER,
+     city_id INTEGER,
      village VARCHAR(100)
 );
 
@@ -19,4 +20,7 @@ ALTER TABLE village_m ADD CONSTRAINT fk_village_m_created_by FOREIGN KEY (create
 ALTER TABLE village_m ADD CONSTRAINT fk_village_m_updated_by FOREIGN KEY (updated_by) REFERENCES employees_m(id) ON DELETE SET NULL;
 ALTER TABLE village_m ADD CONSTRAINT fk_village_m_deleted_by FOREIGN KEY (deleted_by) REFERENCES employees_m(id) ON DELETE SET NULL;
 ALTER TABLE village_m ADD CONSTRAINT fk_village_m_profile_id FOREIGN KEY (profile_id) REFERENCES profiles_m(id) ON DELETE SET NULL;
+
+ALTER TABLE village_m ADD CONSTRAINT fk_village_m_province_id FOREIGN KEY (province_id) REFERENCES provinces_m(id) ON DELETE SET NULL;
 ALTER TABLE village_m ADD CONSTRAINT fk_village_m_subdistrict_id FOREIGN KEY (subdistrict_id) REFERENCES subdistrict_m(id) ON DELETE SET NULL;
+ALTER TABLE village_m ADD CONSTRAINT fk_village_m_city FOREIGN KEY (city_id) REFERENCES cities_m(id) ON DELETE SET NULL;

@@ -6,6 +6,7 @@ require (
 	github.com/brianvoe/gofakeit/v6 v6.28.0
 	github.com/gin-gonic/gin v1.12.0
 	github.com/go-playground/validator/v10 v10.30.1
+	github.com/google/uuid v1.6.0
 	github.com/google/wire v0.7.0
 	github.com/sirupsen/logrus v1.9.4
 	github.com/spf13/viper v1.21.0

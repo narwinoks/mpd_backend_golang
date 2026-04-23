@@ -2,28 +2,20 @@ role
 senior golang development
 
 context
-make logging middleware to handler error 
+add uuid in response all response api 
 
-make with logrus
+task 1
+install package
+https://github.com/gofrs/uuid
 
-tambahkan package
-gopkg.in/natefinch/lumberjack.v2 untuk memecah log
-setting an
+task 2
+set middleware ResponseIDMiddleware
 
-Filename:   "./storage/mpd.log",
-MaxSize:    50, 
-MaxBackups: 30, 
-MaxAge:     28, 
-Compress:   true, 
-
-
-i hope format error
+task 3 
+example response
 {
-"level": "error",
-"time": "2026-04-23T23:17:28Z",
-"message": "User failed to authenticate",
-"username": "winarno",
-"ip_address": "192.168.1.5",
-"module": "auth",
-"action": "login"
+"rc": "500",
+"message": "Internal Server Error",
+"errors": "dial tcp: i/o timeout",
+"request_id": "c1f72e34-9c8a-4b9f-8d2e-1a2b3c4d5e6f"
 }

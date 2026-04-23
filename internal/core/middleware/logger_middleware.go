@@ -1,8 +1,6 @@
 package middleware
 
 import (
-	"time"
-
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
@@ -15,6 +13,7 @@ func LoggerMiddleware() gin.HandlerFunc {
 		// Get any errors from the context
 		if len(c.Errors) > 0 {
 			// Extract custom fields from context if available
+			requestID, _ := c.Get("request_id")
 			username, _ := c.Get("username")
 			if username == nil {
 				username = "anonymous"
@@ -29,6 +28,7 @@ func LoggerMiddleware() gin.HandlerFunc {
 			}
 
 			entry := logrus.WithFields(logrus.Fields{
+				"request_id": requestID,
 				"username":   username,
 				"ip_address": c.ClientIP(),
 				"module":     module,

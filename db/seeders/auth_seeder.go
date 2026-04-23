@@ -56,7 +56,7 @@ func SeedAuth(db *gorm.DB, profileID uint32, employees *EmployeeState) error {
 			SortOrder:   1,
 		}
 		db.Create(&parent)
-		
+
 		child := auth.AppMenu{
 			BaseModel:   createBaseModel(profileID, &winarnoID),
 			AppModuleID: modID,

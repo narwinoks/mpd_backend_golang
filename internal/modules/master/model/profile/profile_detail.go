@@ -15,5 +15,5 @@ type ProfileDetail struct {
 }
 
 func (ProfileDetail) TableName() string {
-	return "profiles_m"
+	return "profile_detail_m"
 }

@@ -36,6 +36,7 @@ func main() {
 	r.Use(gin.Recovery())
 
 	// 6. Global Middleware
+	r.Use(middleware.ResponseIDMiddleware())
 	r.Use(middleware.LoggerMiddleware())
 	r.Use(response.GlobalErrorHandler())
 
