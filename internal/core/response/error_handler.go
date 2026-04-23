@@ -43,6 +43,14 @@ func GlobalErrorHandler() gin.HandlerFunc {
 				return
 			}
 
+			// 2.2 Handle Custom UnauthorizedError
+			var unauthorizedErr exception.UnauthorizedError
+			if errors.As(err, &unauthorizedErr) {
+				SendError(c, Unauthorized, unauthorizedErr.Error())
+				c.Abort()
+				return
+			}
+
 			// 3. Handle Binding/Validation Errors (400)
 
 			// Case: Empty Body (EOF)

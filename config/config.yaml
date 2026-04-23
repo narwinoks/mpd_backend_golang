@@ -22,3 +22,8 @@ database_test:
 
 log:
   level: "debug"
+
+jwt:
+  secret: "your_jwt_secret_key_here"
+  access_token_expiration: 15
+  refresh_token_expiration: 7

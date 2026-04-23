@@ -16,12 +16,20 @@ type Config struct {
 	Database     DatabaseConfig `mapstructure:"database"`
 	DatabaseTest DatabaseConfig `mapstructure:"database_test"`
 	Log          LogConfig      `mapstructure:"log"`
+	JWT          JWTConfig      `mapstructure:"jwt"`
 }
 
 type AppConfig struct {
-	Name string `mapstructure:"name"`
-	Port int    `mapstructure:"port"`
-	Env  string `mapstructure:"env"`
+	Name    string `mapstructure:"name"`
+	Port    int    `mapstructure:"port"`
+	Env     string `mapstructure:"env"`
+	AppName string `mapstructure:"appname"`
+}
+
+type JWTConfig struct {
+	Secret                 string `mapstructure:"secret"`
+	AccessTokenExpiration  int    `mapstructure:"access_token_expiration"`  // in minutes
+	RefreshTokenExpiration int    `mapstructure:"refresh_token_expiration"` // in days
 }
 
 type DatabaseConfig struct {

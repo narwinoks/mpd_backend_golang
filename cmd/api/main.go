@@ -5,6 +5,7 @@ import (
 	"backend-app/internal/core/database"
 	"backend-app/internal/core/middleware"
 	"backend-app/internal/core/response"
+	"backend-app/internal/modules/auth"
 	"backend-app/internal/modules/master"
 	"fmt"
 
@@ -30,6 +31,7 @@ func main() {
 
 	// 4. Initialize Master Router using Wire
 	masterRouter := master.InitializeMasterRouter(cfg, db)
+	authRouter := auth.InitializeAuthRouter(cfg, db)
 
 	// 5. Setup Gin
 	r := gin.New()
@@ -43,6 +45,7 @@ func main() {
 	// 7. Register Routes
 	api := r.Group("/api/v1")
 	masterRouter.RegisterRoutes(api)
+	authRouter.RegisterRoutes(api)
 
 	// 8. Start Server
 	logrus.Infof("Starting %s on port %d...", cfg.App.Name, cfg.App.Port)

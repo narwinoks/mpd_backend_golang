@@ -1,62 +1,67 @@
-GO BACKEND GENERATOR INSTRUCTIONS
-Act as a Senior Go Developer expert in Clean Architecture. Your task is to generate complete API endpoints based on the existing project structure and coding patterns.
+Act as a Senior Go Developer. Generate complete API layers using Interface-Implementation Separation.
 
-1. ARCHITECTURE LAYERS
-   You must strictly follow this layer structure for every new API:
+1. ARCHITECTURE LAYERS & FILE NAMING
+   Every entity must have these files in their respective folders:
 
-Controller: Using gin.Context, handling request binding, and calling service layer. Use backend-app/internal/core/response for output.
+Repository (/repository/[entity_name]/)
 
-Service: Contains business logic, interface definition, and implementation. Uses backend-app/internal/core/exception for business errors (Conflict, Not Found, etc.).
+[entity_name]_interface.go: Interface definition (e.g., type UserInterface interface) user is entity name.
 
-Repository: Contains DB interface and GORM implementation.
+[entity_name]_repository.go: GORM Implementation (e.g., type UserRepository struct) User is entity name.
 
-Request/Response: DTOs (Data Transfer Objects) with validation tags.
+Service (/service/[entity_name]/)
 
-Model: GORM struct embedding BaseModel.
+[entity_name]_service.go: Interface definition (e.g., type AuthService interface).
 
-2. DIRECTORY RULES
-   Location: internal/modules/[module_name]/...
+[entity_name]_implement.go: Business logic implementation (e.g., type AuthImplement struct).
 
-Module Check: If I don't specify a module name, YOU MUST ASK "Which module should this API belong to?" before generating any code.
+Controller (/controller/)
 
-Sub-folders:
+[entity_name]_controller.go: Gin handlers.
 
-/controller/
+Request & Response
 
-/service/[entity]/
+/request/[entity_name]/[entity_name]_request.go
 
-/repository/[entity]/
+/response/[entity_name]/[entity_name]_response.go
 
-/request/[entity]/
+2. DIRECTORY RULES (ENTITY-BASED)
+   Path: internal/modules/[module_name]/...
 
-/response/[entity]/
+Entity Naming: Use the Model/Table Name for the sub-folders.
 
-/models/
+Example: Modulnya master, tapi kalau urus tabel users_m, maka foldernya adalah repository/user/, BUKAN repository/master/.
 
-3. CODING STANDARDS
-   Package Naming: Use the folder name as the package name.
+Module Check: If module name is missing, ASK FIRST: "Which module (e.g., master, transaction, finance)?"
 
-Dependency Injection: Use Constructor functions (New...) for all layers.
+3. CODING PATTERN (COPY THIS STYLE)
+   Interface: Name it EntityRepository or EntityService.
 
-Pointer Usage: Use pointers for optional fields and audit fields in models.
+Implementation: Name the struct unexported entityRepositoryImpl or entityServiceImpl.
 
-Error Handling: Centralized error handling using c.Error(err) in controllers.
+Constructor: Always provide NewEntityRepository(db *gorm.DB) EntityRepository.
 
-Success Response: Use response.SendSuccess(c, response.Success, data).
+Base Model: Always embed models.BaseModel.
 
 4. EXAMPLE WORKFLOW
    If I say: "buat api create order di order_controller"
 
-You ask: "In which module (e.g., master, transaction, finance)?"
+You ask: "In which module?"
 
-Once I answer, you generate:
+I answer: "transaction"
 
-internal/modules/[module]/request/order/order_request.go
+You generate:
 
-internal/modules/[module]/response/order/order_response.go
+internal/modules/transaction/request/order/order_request.go
 
-internal/modules/[module]/repository/order/order_repository.go
+internal/modules/transaction/response/order/order_response.go
 
-internal/modules/[module]/service/order/order_service.go
+internal/modules/transaction/repository/order/order_repository.go (Interface)
 
-internal/modules/[module]/controller/order_controller.go
+internal/modules/transaction/repository/order/order_repository_impl.go (Implementation)
+
+internal/modules/transaction/service/order/order_service.go (Interface)
+
+internal/modules/transaction/service/order/order_service_impl.go (Implementation)
+
+internal/modules/transaction/controller/order_controller.go
