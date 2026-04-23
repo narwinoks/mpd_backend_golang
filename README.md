@@ -82,6 +82,49 @@ air
 go run cmd/api/main.go
 ```
 
+## 🧪 Running Unit Tests
+This project uses `github.com/stretchr/testify` and `github.com/brianvoe/gofakeit/v6` for unit testing. Tests follow the rules defined in `ai/test.md`.
+
+### Run all tests
+```bash
+go test ./...
+```
+
+### Run specific module tests
+```bash
+go test ./internal/modules/master/test/...
+```
+
+### Run with coverage
+```bash
+go test -cover ./...
+```
+
+## 📝 Commit Message Rules
+We follow the **[Conventional Commits](https://www.conventionalcommits.org/)** specification. `husky` and `commitlint` are used to enforce these rules.
+
+### ⚙️ Setup Hooks
+Ensure Node.js dependencies are installed to activate the git hooks:
+```bash
+npm install
+```
+
+### 📋 Format
+Commit messages MUST follow this format:
+`<type>(<optional scope>): <description>`
+
+**Common types:**
+- `feat`: A new feature
+- `fix`: A bug fix
+- `docs`: Documentation only changes
+- `style`: Changes that do not affect the meaning of the code
+- `refactor`: A code change that neither fixes a bug nor adds a feature
+- `test`: Adding missing tests or correcting existing tests
+- `chore`: Changes to the build process or auxiliary tools
+
+**Example:**
+`feat(auth): add user login functionality`
+
 ## 📂 Project Structure
 ```text
 backend-app/

@@ -26,8 +26,7 @@ func main() {
 	}
 
 	// 4. Run Seeders
-	seeder := seeders.NewSeeder(db)
-	if err := seeder.Run(); err != nil {
+	if err := seeders.SeedAll(db); err != nil {
 		logrus.Fatalf("failed to run seeders: %v", err)
 	}
 

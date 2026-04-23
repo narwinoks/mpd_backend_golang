@@ -139,3 +139,18 @@ permission_id fk from permission
 23.user_permission_m
 user_id fk from users_m
 permission_id fk from permission
+
+24.profile_detail_m
+
+profile_id
+website
+longitude
+latitude
+registration_date
+moto
+
+25.subdistrict_villages_m
+province_id fk  provinces_m
+city_id fk cities_m
+district_id fk
+subdistrict_village

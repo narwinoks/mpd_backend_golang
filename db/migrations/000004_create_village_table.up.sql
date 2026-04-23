@@ -11,6 +11,7 @@ CREATE TABLE village_m (
      updated_by INTEGER,
      deleted_by INTEGER,
      subdistrict_id INTEGER,
+     province_id  INTEGER
      village VARCHAR(100)
 );
 

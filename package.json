@@ -1,0 +1,27 @@
+{
+  "name": "mpd_backend_golang",
+  "version": "1.0.0",
+  "description": "Modular Clean Architecture Backend for Hospital Information Management System (SIMRS) built with Golang.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/narwinoks/mpd_backend_golang.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/narwinoks/mpd_backend_golang/issues"
+  },
+  "homepage": "https://github.com/narwinoks/mpd_backend_golang#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^20.5.0",
+    "@commitlint/config-conventional": "^20.5.0",
+    "husky": "^9.1.7"
+  }
+}

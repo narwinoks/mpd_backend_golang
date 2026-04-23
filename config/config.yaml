@@ -12,5 +12,13 @@ database:
   name: "his_database"
   sslmode: "disable"
 
+database_test:
+  host: "localhost"
+  port: 5432
+  user: "postgres"
+  password: "root"
+  name: "his_database_test"
+  sslmode: "disable"
+
 log:
   level: "debug"

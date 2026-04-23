@@ -1,22 +1,47 @@
 package seeders
 
 import (
+	"fmt"
+
 	"gorm.io/gorm"
 )
 
-type Seeder struct {
-	db *gorm.DB
-}
+func SeedAll(db *gorm.DB) error {
+	return db.Transaction(func(tx *gorm.DB) error {
+		// 1. Locations
+		fmt.Println("Seeding Locations...")
+		locations, err := SeedLocations(tx)
+		if err != nil {
+			return fmt.Errorf("failed to seed locations: %w", err)
+		}
 
-func NewSeeder(db *gorm.DB) *Seeder {
-	return &Seeder{db: db}
-}
+		// 2. Profiles
+		fmt.Println("Seeding Profiles...")
+		profiles, err := SeedProfiles(tx, locations)
+		if err != nil {
+			return fmt.Errorf("failed to seed profiles: %w", err)
+		}
 
-func (s *Seeder) Run() error {
-	if err := SeedUser(s.db); err != nil {
-		return err
-	}
-	// Add other seeders here as needed
+		// 3. Masters
+		fmt.Println("Seeding Masters...")
+		masters, err := SeedMasters(tx, profiles.ProfileID)
+		if err != nil {
+			return fmt.Errorf("failed to seed masters: %w", err)
+		}
 
-	return nil
+		// 4. Employees
+		fmt.Println("Seeding Employees...")
+		employees, err := SeedEmployees(tx, profiles.ProfileID, masters)
+		if err != nil {
+			return fmt.Errorf("failed to seed employees: %w", err)
+		}
+
+		// 5. Auth & RBAC
+		fmt.Println("Seeding Auth & RBAC...")
+		if err := SeedAuth(tx, profiles.ProfileID, employees); err != nil {
+			return fmt.Errorf("failed to seed auth: %w", err)
+		}
+
+		return nil
+	})
 }

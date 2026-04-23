@@ -9,9 +9,10 @@ import (
 )
 
 type Config struct {
-	App      AppConfig      `mapstructure:"app"`
-	Database DatabaseConfig `mapstructure:"database"`
-	Log      LogConfig      `mapstructure:"log"`
+	App          AppConfig      `mapstructure:"app"`
+	Database     DatabaseConfig `mapstructure:"database"`
+	DatabaseTest DatabaseConfig `mapstructure:"database_test"`
+	Log          LogConfig      `mapstructure:"log"`
 }
 
 type AppConfig struct {
