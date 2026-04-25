@@ -55,10 +55,12 @@ func (s *authServiceImpl) Login(request *req.LoginRequest) (*res.LoginResponse, 
 	// Generate Tokens
 	accessTokenExpiration := time.Now().Add(time.Duration(s.config.JWT.AccessTokenExpiration) * time.Minute)
 	accessTokenClaims := &jwt.MapClaims{
-		"user_id":  user.ID,
-		"username": user.Username,
-		"exp":      accessTokenExpiration.Unix(),
-		"type":     "access",
+		"user_id":     user.ID,
+		"username":    user.Username,
+		"employee_id": user.EmployeeID,
+		"profile_id":  user.ProfileID,
+		"exp":         accessTokenExpiration.Unix(),
+		"type":        "access",
 	}
 
 	accessToken := jwt.NewWithClaims(jwt.SigningMethodHS256, accessTokenClaims)
@@ -70,10 +72,12 @@ func (s *authServiceImpl) Login(request *req.LoginRequest) (*res.LoginResponse, 
 
 	refreshTokenExpiration := time.Now().Add(time.Duration(s.config.JWT.RefreshTokenExpiration) * 24 * time.Hour)
 	refreshTokenClaims := &jwt.MapClaims{
-		"user_id":  user.ID,
-		"username": user.Username,
-		"exp":      refreshTokenExpiration.Unix(),
-		"type":     "refresh",
+		"user_id":     user.ID,
+		"username":    user.Username,
+		"employee_id": user.EmployeeID,
+		"profile_id":  user.ProfileID,
+		"exp":         refreshTokenExpiration.Unix(),
+		"type":        "refresh",
 	}
 
 	refreshToken := jwt.NewWithClaims(jwt.SigningMethodHS256, refreshTokenClaims)
@@ -172,10 +176,12 @@ func (s *authServiceImpl) RefreshToken(request *req.RefreshTokenRequest) (*res.L
 	// 3. Generate New Tokens
 	accessTokenExpiration := time.Now().Add(time.Duration(s.config.JWT.AccessTokenExpiration) * time.Minute)
 	accessTokenClaims := &jwt.MapClaims{
-		"user_id":  userID,
-		"username": username,
-		"exp":      accessTokenExpiration.Unix(),
-		"type":     "access",
+		"user_id":     userID,
+		"username":    username,
+		"employee_id": user.EmployeeID,
+		"profile_id":  user.ProfileID,
+		"exp":         accessTokenExpiration.Unix(),
+		"type":        "access",
 	}
 
 	newAccessToken := jwt.NewWithClaims(jwt.SigningMethodHS256, accessTokenClaims)
@@ -186,10 +192,12 @@ func (s *authServiceImpl) RefreshToken(request *req.RefreshTokenRequest) (*res.L
 
 	newRefreshTokenExpiration := time.Now().Add(time.Duration(s.config.JWT.RefreshTokenExpiration) * 24 * time.Hour)
 	newRefreshTokenClaims := &jwt.MapClaims{
-		"user_id":  userID,
-		"username": username,
-		"exp":      newRefreshTokenExpiration.Unix(),
-		"type":     "refresh",
+		"user_id":     userID,
+		"username":    username,
+		"employee_id": user.EmployeeID,
+		"profile_id":  user.ProfileID,
+		"exp":         newRefreshTokenExpiration.Unix(),
+		"type":        "refresh",
 	}
 
 	newRefreshToken := jwt.NewWithClaims(jwt.SigningMethodHS256, newRefreshTokenClaims)

@@ -3,6 +3,7 @@ app:
   port: 8081
   env: "development"
   appname: "HIS"
+  external_code: "MPD HIS"
 
 database:
   host: "localhost"

@@ -3,6 +3,7 @@ package models
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -18,4 +19,59 @@ type BaseModel struct {
 	CreatedBy    *uint32        `gorm:"column:created_by" json:"created_by"`
 	UpdatedBy    *uint32        `gorm:"column:updated_by" json:"updated_by"`
 	DeletedBy    *uint32        `gorm:"column:deleted_by" json:"deleted_by"`
+}
+
+func (m *BaseModel) BeforeCreate(tx *gorm.DB) (err error) {
+	if m.UUID == "" {
+		m.UUID = uuid.New().String()
+	}
+
+	ctx := tx.Statement.Context
+	if ctx != nil {
+		if employeeID, ok := ctx.Value("employee_id").(uint32); ok {
+			m.CreatedBy = &employeeID
+			m.UpdatedBy = &employeeID
+		}
+
+		if profileID, ok := ctx.Value("profile_id").(uint32); ok {
+			m.ProfileID = &profileID
+		}
+
+		if externalCode, ok := ctx.Value("external_code").(string); ok {
+			m.ExternalCode = externalCode
+		}
+	}
+	return
+}
+
+func (m *BaseModel) BeforeUpdate(tx *gorm.DB) (err error) {
+	ctx := tx.Statement.Context
+	if ctx != nil {
+		if employeeID, ok := ctx.Value("employee_id").(uint32); ok {
+			m.UpdatedBy = &employeeID
+		}
+	}
+	return
+}
+
+func (m *BaseModel) BeforeDelete(tx *gorm.DB) (err error) {
+	ctx := tx.Statement.Context
+	if ctx != nil {
+		if employeeID, ok := ctx.Value("employee_id").(uint32); ok {
+			m.DeletedBy = &employeeID
+		}
+	}
+	return
+}
+
+func (m *BaseModel) SetNonActive(tx *gorm.DB) error {
+	ctx := tx.Statement.Context
+	if ctx != nil {
+		if employeeID, ok := ctx.Value("employee_id").(uint32); ok {
+			m.DeletedBy = &employeeID
+		}
+	}
+	m.IsActive = false
+	m.DeletedAt = gorm.DeletedAt{Time: time.Now(), Valid: true}
+	return tx.Save(m).Error
 }

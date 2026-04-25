@@ -2,29 +2,14 @@ role
 senior golang development
 
 context
-1.fix my result
-"menus": [
-{
-"id": 1,
-"code": "kuMTH",
-"name": "Dashboard",
-"path": "/dashboard",
-"icon": "",
-"description": "",
-"sort_order": 1,
-"children": [
-{
-"id": 2,
-"code": "eaxxe",
-"name": "Reports",
-"path": "/reports",
-"icon": "",
-"description": "",
-"sort_order": 2
-}
-]
-}
-]
+1.default model on context
+make with creating method
+used 
+created_by for employee_id
+updated_by 
+and deleted_by
 
-remove module result 
-live to menu object 
+make custom method for delete data setNonActive if im call please update dleeted at and is_active
+
+external_code add in config file 
+profile_id get by user createting

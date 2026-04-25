@@ -20,10 +20,11 @@ type Config struct {
 }
 
 type AppConfig struct {
-	Name    string `mapstructure:"name"`
-	Port    int    `mapstructure:"port"`
-	Env     string `mapstructure:"env"`
-	AppName string `mapstructure:"appname"`
+	Name         string `mapstructure:"name"`
+	Port         int    `mapstructure:"port"`
+	Env          string `mapstructure:"env"`
+	AppName      string `mapstructure:"appname"`
+	ExternalCode string `mapstructure:"external_code"`
 }
 
 type JWTConfig struct {

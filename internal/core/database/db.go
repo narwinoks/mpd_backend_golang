@@ -40,6 +40,27 @@ func connect(dbCfg config.DatabaseConfig) (*gorm.DB, error) {
 		return nil, err
 	}
 
+	filterCallback := func(db *gorm.DB) {
+		if !db.DryRun && db.Error == nil {
+			FilterProfile(db)
+		}
+	}
+
+	db.Callback().Query().Before("gorm:query").Register("filter_profile", filterCallback)
+	db.Callback().Update().Before("gorm:update").Register("filter_profile", filterCallback)
+	db.Callback().Delete().Before("gorm:delete").Register("filter_profile", filterCallback)
+	db.Callback().Row().Before("gorm:row").Register("filter_profile", filterCallback)
+	db.Callback().Raw().Before("gorm:raw").Register("filter_profile", filterCallback)
+
+	orderCallback := func(db *gorm.DB) {
+		if !db.DryRun && db.Error == nil {
+			if _, skip := db.Get("gorm:without_default_order"); !skip {
+				DefaultOrder(db)
+			}
+		}
+	}
+	db.Callback().Query().Before("gorm:query").After("filter_profile").Register("default_order", orderCallback)
+
 	logrus.Infof("Database connection established: %s", dbCfg.Name)
 	return db, nil
 }

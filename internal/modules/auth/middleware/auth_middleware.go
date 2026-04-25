@@ -4,6 +4,7 @@ import (
 	"backend-app/config"
 	"backend-app/internal/core/exception"
 	"backend-app/internal/modules/auth/repository/personal_access_token"
+	"context"
 	"fmt"
 	"strings"
 
@@ -72,9 +73,38 @@ func AuthMiddleware(cfg *config.Config, tokenRepo personal_access_token.TokenRep
 		userID := uint32(claims["user_id"].(float64))
 		username := claims["username"].(string)
 
-		// Set to context
+		var employeeID *uint32
+		if claims["employee_id"] != nil {
+			val := uint32(claims["employee_id"].(float64))
+			employeeID = &val
+		}
+
+		var profileID *uint32
+		if claims["profile_id"] != nil {
+			val := uint32(claims["profile_id"].(float64))
+			profileID = &val
+		}
+
+		// Set to Gin context
 		c.Set("user_id", userID)
 		c.Set("username", username)
+		if employeeID != nil {
+			c.Set("employee_id", *employeeID)
+		}
+		if profileID != nil {
+			c.Set("profile_id", *profileID)
+		}
+
+		// Also set to standard context for GORM hooks
+		ctx := c.Request.Context()
+		if employeeID != nil {
+			ctx = context.WithValue(ctx, "employee_id", *employeeID)
+		}
+		if profileID != nil {
+			ctx = context.WithValue(ctx, "profile_id", *profileID)
+		}
+		ctx = context.WithValue(ctx, "external_code", cfg.App.ExternalCode)
+		c.Request = c.Request.WithContext(ctx)
 
 		c.Next()
 	}
