@@ -2,8 +2,29 @@ role
 senior golang development
 
 context
-1.refresh token
-2.send refresh token param  
-3.check token valid or not 
-4.return new access token and new refresh token
-5.black list old referesh token
+1.fix my result
+"menus": [
+{
+"id": 1,
+"code": "kuMTH",
+"name": "Dashboard",
+"path": "/dashboard",
+"icon": "",
+"description": "",
+"sort_order": 1,
+"children": [
+{
+"id": 2,
+"code": "eaxxe",
+"name": "Reports",
+"path": "/reports",
+"icon": "",
+"description": "",
+"sort_order": 2
+}
+]
+}
+]
+
+remove module result 
+live to menu object 
