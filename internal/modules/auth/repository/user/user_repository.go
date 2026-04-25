@@ -22,3 +22,12 @@ func (r *userRepositoryImpl) FindByIdentity(identity string) (*models.User, erro
 	}
 	return &user, nil
 }
+
+func (r *userRepositoryImpl) FindByID(id uint32) (*models.User, error) {
+	var user models.User
+	err := r.db.First(&user, id).Error
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
+}

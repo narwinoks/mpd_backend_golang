@@ -2,7 +2,10 @@ package user
 
 import (
 	"backend-app/config"
+	baseModels "backend-app/internal/base/models"
 	"backend-app/internal/core/exception"
+	authModels "backend-app/internal/modules/auth/models"
+	tokenRepo "backend-app/internal/modules/auth/repository/personal_access_token"
 	"backend-app/internal/modules/auth/repository/user"
 	req "backend-app/internal/modules/auth/request/user"
 	res "backend-app/internal/modules/auth/response/user"
@@ -10,19 +13,22 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type userServiceImpl struct {
-	repo   user.UserRepository
-	config *config.Config
+	repo      user.UserRepository
+	tokenRepo tokenRepo.TokenRepository
+	config    *config.Config
 }
 
-func NewUserService(repo user.UserRepository, config *config.Config) UserService {
+func NewUserService(repo user.UserRepository, tokenRepo tokenRepo.TokenRepository, config *config.Config) UserService {
 	return &userServiceImpl{
-		repo:   repo,
-		config: config,
+		repo:      repo,
+		tokenRepo: tokenRepo,
+		config:    config,
 	}
 }
 
@@ -77,11 +83,131 @@ func (s *userServiceImpl) Login(request *req.LoginRequest) (*res.LoginResponse, 
 		return nil, fmt.Errorf("failed to generate refresh token")
 	}
 
+	// Store Refresh Token
+	err = s.tokenRepo.Create(&authModels.PersonalAccessToken{
+		BaseModel: baseModels.BaseModel{
+			UUID:      uuid.New().String(),
+			IsActive:  true,
+			ProfileID: user.ProfileID,
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+		},
+		UserID:    user.ID,
+		Token:     refreshTokenString,
+		ExpiredAt: refreshTokenExpiration,
+	})
+	if err != nil {
+		logrus.Errorf("Failed to store refresh token: %v", err)
+	}
+
 	logrus.Infof("Login successful for user: %s", user.Username)
 
 	return &res.LoginResponse{
 		AccessToken:      accessTokenString,
 		RefreshToken:     refreshTokenString,
+		TokenType:        "Bearer",
+		ExpiresIn:        s.config.JWT.AccessTokenExpiration * 60,
+		RefreshExpiresIn: s.config.JWT.RefreshTokenExpiration * 24 * 3600,
+	}, nil
+}
+
+func (s *userServiceImpl) RefreshToken(request *req.RefreshTokenRequest) (*res.LoginResponse, error) {
+	logrus.Info("Attempting to refresh token")
+
+	// 1. Verify token signature and validity
+	token, err := jwt.Parse(request.RefreshToken, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return []byte(s.config.JWT.Secret), nil
+	})
+
+	if err != nil || !token.Valid {
+		logrus.Errorf("Invalid refresh token: %v", err)
+		return nil, exception.NewUnauthorizedError("Invalid refresh token")
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok || claims["type"] != "refresh" {
+		return nil, exception.NewUnauthorizedError("Invalid token type")
+	}
+
+	// 2. Check if token is blacklisted/revoked
+	isRevoked, err := s.tokenRepo.IsRevoked(request.RefreshToken)
+	if err != nil {
+		logrus.Errorf("Failed to check token status: %v", err)
+		return nil, fmt.Errorf("internal server error")
+	}
+	if isRevoked {
+		return nil, exception.NewUnauthorizedError("Token has been revoked")
+	}
+
+	userID := uint32(claims["user_id"].(float64))
+	username := claims["username"].(string)
+
+	// Fetch user to get ProfileID and ensure user still exists
+	user, err := s.repo.FindByID(userID)
+	if err != nil {
+		logrus.Errorf("User not found during refresh: %v", err)
+		return nil, exception.NewUnauthorizedError("User not found")
+	}
+
+	// 3. Generate New Tokens
+	accessTokenExpiration := time.Now().Add(time.Duration(s.config.JWT.AccessTokenExpiration) * time.Minute)
+	accessTokenClaims := &jwt.MapClaims{
+		"user_id":  userID,
+		"username": username,
+		"exp":      accessTokenExpiration.Unix(),
+		"type":     "access",
+	}
+
+	newAccessToken := jwt.NewWithClaims(jwt.SigningMethodHS256, accessTokenClaims)
+	newAccessTokenString, err := newAccessToken.SignedString([]byte(s.config.JWT.Secret))
+	if err != nil {
+		return nil, fmt.Errorf("failed to generate access token")
+	}
+
+	newRefreshTokenExpiration := time.Now().Add(time.Duration(s.config.JWT.RefreshTokenExpiration) * 24 * time.Hour)
+	newRefreshTokenClaims := &jwt.MapClaims{
+		"user_id":  userID,
+		"username": username,
+		"exp":      newRefreshTokenExpiration.Unix(),
+		"type":     "refresh",
+	}
+
+	newRefreshToken := jwt.NewWithClaims(jwt.SigningMethodHS256, newRefreshTokenClaims)
+	newRefreshTokenString, err := newRefreshToken.SignedString([]byte(s.config.JWT.Secret))
+	if err != nil {
+		return nil, fmt.Errorf("failed to generate refresh token")
+	}
+
+	// 4. Blacklist old token and store new one
+	err = s.tokenRepo.RevokeByToken(request.RefreshToken)
+	if err != nil {
+		logrus.Errorf("Failed to revoke old token: %v", err)
+	}
+
+	err = s.tokenRepo.Create(&authModels.PersonalAccessToken{
+		BaseModel: baseModels.BaseModel{
+			UUID:      uuid.New().String(),
+			IsActive:  true,
+			ProfileID: user.ProfileID,
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+		},
+		UserID:    userID,
+		Token:     newRefreshTokenString,
+		ExpiredAt: newRefreshTokenExpiration,
+	})
+	if err != nil {
+		logrus.Errorf("Failed to store new refresh token: %v", err)
+	}
+
+	logrus.Infof("Token refresh successful for user_id: %d", userID)
+
+	return &res.LoginResponse{
+		AccessToken:      newAccessTokenString,
+		RefreshToken:     newRefreshTokenString,
 		TokenType:        "Bearer",
 		ExpiresIn:        s.config.JWT.AccessTokenExpiration * 60,
 		RefreshExpiresIn: s.config.JWT.RefreshTokenExpiration * 24 * 3600,

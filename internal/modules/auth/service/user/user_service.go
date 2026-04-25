@@ -7,4 +7,5 @@ import (
 
 type UserService interface {
 	Login(request *req.LoginRequest) (*res.LoginResponse, error)
+	RefreshToken(request *req.RefreshTokenRequest) (*res.LoginResponse, error)
 }

@@ -14,9 +14,10 @@ func NewAuthRouter(authController *controller.AuthController) *AuthRouter {
 	return &AuthRouter{authController: authController}
 }
 
-func (r *AuthRouter) RegisterRoutes(rg *gin.RouterGroup) {
-	auth := rg.Group("/auth")
+func (r *AuthRouter) RegisterRoutes(api *gin.RouterGroup) {
+	auth := api.Group("/auth")
 	{
 		auth.POST("/login", r.authController.Login)
+		auth.POST("/refresh-token", r.authController.RefreshToken)
 	}
 }

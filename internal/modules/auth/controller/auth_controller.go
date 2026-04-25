@@ -32,3 +32,20 @@ func (h *AuthController) Login(c *gin.Context) {
 
 	response.SendSuccess(c, response.Success, res)
 }
+
+func (h *AuthController) RefreshToken(c *gin.Context) {
+	var refreshReq req.RefreshTokenRequest
+
+	if err := c.ShouldBindJSON(&refreshReq); err != nil {
+		c.Error(err)
+		return
+	}
+
+	res, err := h.userService.RefreshToken(&refreshReq)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	response.SendSuccess(c, response.Success, res)
+}

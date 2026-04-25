@@ -2,7 +2,8 @@ role
 senior golang development
 
 context
-1.fixed my api login
-2.send refresh token for response 
-3.access token set 15 menit referesh token 7 day
-4.setting in config.yml
+1.refresh token
+2.send refresh token param  
+3.check token valid or not 
+4.return new access token and new refresh token
+5.black list old referesh token
