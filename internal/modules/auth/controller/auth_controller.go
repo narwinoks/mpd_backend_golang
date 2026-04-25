@@ -4,17 +4,17 @@ import (
 	"backend-app/internal/core/exception"
 	"backend-app/internal/core/response"
 	req "backend-app/internal/modules/auth/request/user"
-	"backend-app/internal/modules/auth/service/user"
+	"backend-app/internal/modules/auth/service/auth"
 
 	"github.com/gin-gonic/gin"
 )
 
 type AuthController struct {
-	userService user.UserService
+	authService auth.AuthService
 }
 
-func NewAuthController(userService user.UserService) *AuthController {
-	return &AuthController{userService: userService}
+func NewAuthController(authService auth.AuthService) *AuthController {
+	return &AuthController{authService: authService}
 }
 
 func (h *AuthController) Login(c *gin.Context) {
@@ -25,7 +25,7 @@ func (h *AuthController) Login(c *gin.Context) {
 		return
 	}
 
-	res, err := h.userService.Login(&loginReq)
+	res, err := h.authService.Login(&loginReq)
 	if err != nil {
 		c.Error(err)
 		return
@@ -42,7 +42,7 @@ func (h *AuthController) RefreshToken(c *gin.Context) {
 		return
 	}
 
-	res, err := h.userService.RefreshToken(&refreshReq)
+	res, err := h.authService.RefreshToken(&refreshReq)
 	if err != nil {
 		c.Error(err)
 		return
@@ -58,7 +58,7 @@ func (h *AuthController) Logout(c *gin.Context) {
 		return
 	}
 
-	err := h.userService.Logout(userID.(uint32))
+	err := h.authService.Logout(userID.(uint32))
 	if err != nil {
 		c.Error(err)
 		return

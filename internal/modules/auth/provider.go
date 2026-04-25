@@ -4,7 +4,8 @@ import (
 	"backend-app/internal/modules/auth/controller"
 	tokenRepo "backend-app/internal/modules/auth/repository/personal_access_token"
 	repo "backend-app/internal/modules/auth/repository/user"
-	svc "backend-app/internal/modules/auth/service/user"
+	svcAuth "backend-app/internal/modules/auth/service/auth"
+	svcUser "backend-app/internal/modules/auth/service/user"
 
 	"github.com/google/wire"
 )
@@ -12,7 +13,9 @@ import (
 var AuthProviderSet = wire.NewSet(
 	repo.NewUserRepository,
 	tokenRepo.NewTokenRepository,
-	svc.NewUserService,
+	svcAuth.NewAuthService,
+	svcUser.NewUserService,
 	controller.NewAuthController,
+	controller.NewUserController,
 	NewAuthRouter,
 )

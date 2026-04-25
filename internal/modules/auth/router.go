@@ -11,13 +11,20 @@ import (
 
 type AuthRouter struct {
 	authController *controller.AuthController
+	userController *controller.UserController
 	config         *config.Config
 	tokenRepo      personal_access_token.TokenRepository
 }
 
-func NewAuthRouter(authController *controller.AuthController, config *config.Config, tokenRepo personal_access_token.TokenRepository) *AuthRouter {
+func NewAuthRouter(
+	authController *controller.AuthController,
+	userController *controller.UserController,
+	config *config.Config,
+	tokenRepo personal_access_token.TokenRepository,
+) *AuthRouter {
 	return &AuthRouter{
 		authController: authController,
+		userController: userController,
 		config:         config,
 		tokenRepo:      tokenRepo,
 	}
@@ -29,5 +36,7 @@ func (r *AuthRouter) RegisterRoutes(api *gin.RouterGroup) {
 		auth.POST("/login", r.authController.Login)
 		auth.POST("/refresh-token", r.authController.RefreshToken)
 		auth.POST("/logout", middleware.AuthMiddleware(r.config, r.tokenRepo), r.authController.Logout)
+		user := auth.Group("user")
+		user.GET("/profile", middleware.AuthMiddleware(r.config, r.tokenRepo), r.userController.GetProfile)
 	}
 }

@@ -11,6 +11,7 @@ import (
 	"backend-app/internal/modules/auth/controller"
 	"backend-app/internal/modules/auth/repository/personal_access_token"
 	"backend-app/internal/modules/auth/repository/user"
+	"backend-app/internal/modules/auth/service/auth"
 	user2 "backend-app/internal/modules/auth/service/user"
 	"gorm.io/gorm"
 )
@@ -20,8 +21,10 @@ import (
 func InitializeAuthRouter(cfg *config.Config, db *gorm.DB) *AuthRouter {
 	userRepository := user.NewUserRepository(db)
 	tokenRepository := personal_access_token.NewTokenRepository(db)
-	userService := user2.NewUserService(userRepository, tokenRepository, cfg)
-	authController := controller.NewAuthController(userService)
-	authRouter := NewAuthRouter(authController, cfg, tokenRepository)
+	authService := auth.NewAuthService(userRepository, tokenRepository, cfg)
+	authController := controller.NewAuthController(authService)
+	userService := user2.NewUserService(userRepository)
+	userController := controller.NewUserController(userService)
+	authRouter := NewAuthRouter(authController, userController, cfg, tokenRepository)
 	return authRouter
 }

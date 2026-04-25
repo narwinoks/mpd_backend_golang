@@ -7,4 +7,5 @@ import (
 type UserRepository interface {
 	FindByIdentity(identity string) (*models.User, error)
 	FindByID(id uint32) (*models.User, error)
+	GetProfile(userID uint32) (*models.User, error)
 }

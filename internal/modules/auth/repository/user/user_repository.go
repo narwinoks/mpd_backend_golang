@@ -31,3 +31,19 @@ func (r *userRepositoryImpl) FindByID(id uint32) (*models.User, error) {
 	}
 	return &user, nil
 }
+
+func (r *userRepositoryImpl) GetProfile(userID uint32) (*models.User, error) {
+	var user models.User
+	err := r.db.
+		Select("id", "username", "email", "role_id", "employee_id").
+		Preload("Employee", func(db *gorm.DB) *gorm.DB {
+			return db.Select("id", "full_name", "identity_number", "nip")
+		}).
+		Preload("Role", func(db *gorm.DB) *gorm.DB {
+			return db.Select("id", "role")
+		}).First(&user, userID).Error
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
