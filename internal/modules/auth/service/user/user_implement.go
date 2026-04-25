@@ -83,6 +83,23 @@ func (s *userServiceImpl) Login(request *req.LoginRequest) (*res.LoginResponse, 
 		return nil, fmt.Errorf("failed to generate refresh token")
 	}
 
+	// Store Access Token
+	err = s.tokenRepo.Create(&authModels.PersonalAccessToken{
+		BaseModel: baseModels.BaseModel{
+			UUID:      uuid.New().String(),
+			IsActive:  true,
+			ProfileID: user.ProfileID,
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+		},
+		UserID:    user.ID,
+		Token:     accessTokenString,
+		ExpiredAt: accessTokenExpiration,
+	})
+	if err != nil {
+		logrus.Errorf("Failed to store access token: %v", err)
+	}
+
 	// Store Refresh Token
 	err = s.tokenRepo.Create(&authModels.PersonalAccessToken{
 		BaseModel: baseModels.BaseModel{
@@ -196,6 +213,22 @@ func (s *userServiceImpl) RefreshToken(request *req.RefreshTokenRequest) (*res.L
 			UpdatedAt: time.Now(),
 		},
 		UserID:    userID,
+		Token:     newAccessTokenString,
+		ExpiredAt: accessTokenExpiration,
+	})
+	if err != nil {
+		logrus.Errorf("Failed to store new access token: %v", err)
+	}
+
+	err = s.tokenRepo.Create(&authModels.PersonalAccessToken{
+		BaseModel: baseModels.BaseModel{
+			UUID:      uuid.New().String(),
+			IsActive:  true,
+			ProfileID: user.ProfileID,
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+		},
+		UserID:    userID,
 		Token:     newRefreshTokenString,
 		ExpiredAt: newRefreshTokenExpiration,
 	})
@@ -212,4 +245,17 @@ func (s *userServiceImpl) RefreshToken(request *req.RefreshTokenRequest) (*res.L
 		ExpiresIn:        s.config.JWT.AccessTokenExpiration * 60,
 		RefreshExpiresIn: s.config.JWT.RefreshTokenExpiration * 24 * 3600,
 	}, nil
+}
+
+func (s *userServiceImpl) Logout(userID uint32) error {
+	logrus.Infof("Attempting logout and revocation of all tokens for user_id: %d", userID)
+
+	// Revoke all tokens for the user
+	err := s.tokenRepo.RevokeByUserID(userID)
+	if err != nil {
+		logrus.Errorf("Failed to revoke tokens during logout for user %d: %v", userID, err)
+		return fmt.Errorf("failed to logout")
+	}
+
+	return nil
 }

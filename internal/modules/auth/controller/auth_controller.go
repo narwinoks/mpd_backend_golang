@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"backend-app/internal/core/exception"
 	"backend-app/internal/core/response"
 	req "backend-app/internal/modules/auth/request/user"
 	"backend-app/internal/modules/auth/service/user"
@@ -48,4 +49,20 @@ func (h *AuthController) RefreshToken(c *gin.Context) {
 	}
 
 	response.SendSuccess(c, response.Success, res)
+}
+
+func (h *AuthController) Logout(c *gin.Context) {
+	userID, exists := c.Get("user_id")
+	if !exists {
+		c.Error(exception.NewUnauthorizedError("User not found in context"))
+		return
+	}
+
+	err := h.userService.Logout(userID.(uint32))
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	response.SendSuccess(c, response.Success, nil)
 }

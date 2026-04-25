@@ -22,6 +22,6 @@ func InitializeAuthRouter(cfg *config.Config, db *gorm.DB) *AuthRouter {
 	tokenRepository := personal_access_token.NewTokenRepository(db)
 	userService := user2.NewUserService(userRepository, tokenRepository, cfg)
 	authController := controller.NewAuthController(userService)
-	authRouter := NewAuthRouter(authController)
+	authRouter := NewAuthRouter(authController, cfg, tokenRepository)
 	return authRouter
 }

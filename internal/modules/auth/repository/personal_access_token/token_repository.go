@@ -32,6 +32,12 @@ func (r *tokenRepositoryImpl) RevokeByToken(token string) error {
 		Update("is_revoked", true).Error
 }
 
+func (r *tokenRepositoryImpl) RevokeByUserID(userID uint32) error {
+	return r.db.Model(&models.PersonalAccessToken{}).
+		Where("user_id = ?", userID).
+		Update("is_revoked", true).Error
+}
+
 func (r *tokenRepositoryImpl) IsRevoked(token string) (bool, error) {
 	var m models.PersonalAccessToken
 	err := r.db.Where("token = ?", token).First(&m).Error

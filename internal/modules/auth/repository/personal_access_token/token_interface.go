@@ -6,5 +6,6 @@ type TokenRepository interface {
 	Create(token *models.PersonalAccessToken) error
 	FindByToken(token string) (*models.PersonalAccessToken, error)
 	RevokeByToken(token string) error
+	RevokeByUserID(userID uint32) error
 	IsRevoked(token string) (bool, error)
 }
