@@ -1,6 +1,8 @@
 package response
 
 import (
+	"reflect"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,6 +15,11 @@ type WebResponse struct {
 }
 
 func SendSuccess(c *gin.Context, status Status, data interface{}) {
+	if isEmpty(data) {
+		SendError(c, DataNotFound, "")
+		return
+	}
+
 	requestID, _ := c.Get("request_id")
 	requestIDStr, _ := requestID.(string)
 
@@ -22,6 +29,31 @@ func SendSuccess(c *gin.Context, status Status, data interface{}) {
 		Data:      data,
 		RequestID: requestIDStr,
 	})
+}
+
+func isEmpty(data interface{}) bool {
+	if data == nil {
+		return true
+	}
+
+	v := reflect.ValueOf(data)
+	switch v.Kind() {
+	case reflect.Slice, reflect.Map, reflect.Chan, reflect.Array:
+		return v.Len() == 0
+	case reflect.Ptr:
+		if v.IsNil() {
+			return true
+		}
+		return isEmpty(v.Elem().Interface())
+	case reflect.Interface:
+		if v.IsNil() {
+			return true
+		}
+		return isEmpty(v.Elem().Interface())
+	}
+
+	// For other types like string, int, etc., consider not empty unless we want to check zero values
+	return false
 }
 
 func SendError(c *gin.Context, status Status, errDetail interface{}) {

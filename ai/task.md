@@ -2,14 +2,26 @@ role
 senior golang development
 
 context
-1.default model on context
-make with creating method
-used 
-created_by for employee_id
-updated_by 
-and deleted_by
+1.standart api
 
-make custom method for delete data setNonActive if im call please update dleeted at and is_active
+for first
+if empty data dosent 
+sent
+{
+"rc": "200",
+"message": "Successfully",
+"data": null,
+"request_id": "019dc490-7149-70dd-ae1c-cec0071a9945"
+}
 
-external_code add in config file 
-profile_id get by user createting
+or
+{
+"rc": "200",
+"message": "Successfully",
+"data": {
+"permissions": []
+},
+"request_id": "019dc48f-472a-7cd1-91df-59d6f37007a5"
+}
+
+please sent 404

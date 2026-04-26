@@ -1,6 +1,8 @@
 package database
 
 import (
+	"fmt"
+
 	"gorm.io/gorm"
 )
 
@@ -9,8 +11,10 @@ func FilterProfile(db *gorm.DB) *gorm.DB {
 		if _, ok := db.Statement.Schema.FieldsByDBName["profile_id"]; ok {
 			ctx := db.Statement.Context
 			if ctx != nil {
+				tableName := db.Statement.Schema.Table
 				if profileID, ok := ctx.Value("profile_id").(uint32); ok {
-					return db.Where("profile_id = ?", profileID)
+					queryCondition := fmt.Sprintf("%s.profile_id = ?", tableName)
+					return db.Statement.Where(queryCondition, profileID)
 				}
 			}
 		}
@@ -20,12 +24,16 @@ func FilterProfile(db *gorm.DB) *gorm.DB {
 
 func DefaultOrder(db *gorm.DB) *gorm.DB {
 	if _, ok := db.Statement.Clauses["ORDER BY"]; !ok {
-		return db.Order("id DESC")
+		if db.Statement.Schema != nil {
+			tableName := db.Statement.Schema.Table
+			orderQuery := fmt.Sprintf("%s.id DESC", tableName)
+			return db.Order(orderQuery)
+		}
+
 	}
+
 	return db
 }
-
-// WithoutDefaultOrder is a marker scope (optional usage depending on how global callbacks are implemented)
 func WithoutDefaultOrder(db *gorm.DB) *gorm.DB {
 	return db.Set("gorm:without_default_order", true)
 }

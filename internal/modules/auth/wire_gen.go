@@ -11,10 +11,12 @@ import (
 	"backend-app/internal/modules/auth/controller"
 	"backend-app/internal/modules/auth/repository/menu"
 	"backend-app/internal/modules/auth/repository/module"
+	"backend-app/internal/modules/auth/repository/permission"
 	"backend-app/internal/modules/auth/repository/personal_access_token"
 	"backend-app/internal/modules/auth/repository/user"
 	"backend-app/internal/modules/auth/service/auth"
 	menu2 "backend-app/internal/modules/auth/service/menu"
+	permission2 "backend-app/internal/modules/auth/service/permission"
 	user2 "backend-app/internal/modules/auth/service/user"
 	"gorm.io/gorm"
 )
@@ -28,10 +30,13 @@ func InitializeAuthRouter(cfg *config.Config, db *gorm.DB) *AuthRouter {
 	authController := controller.NewAuthController(authService)
 	userService := user2.NewUserService(userRepository)
 	userController := controller.NewUserController(userService)
-	menuRepository := menu.NewMenuRepository(db)
+	menuInterface := menu.NewMenuRepository(db)
 	moduleRepository := module.NewModuleRepository(db)
-	menuService := menu2.NewMenuService(menuRepository,moduleRepository)
+	menuService := menu2.NewMenuService(menuInterface, moduleRepository)
 	menuController := controller.NewMenuController(menuService, userRepository)
-	authRouter := NewAuthRouter(authController, userController, menuController, cfg, tokenRepository)
+	permissionRepository := permission.NewPermissionRepository(db)
+	permissionService := permission2.NewPermissionService(permissionRepository, userRepository)
+	permissionController := controller.NewPermissionController(permissionService)
+	authRouter := NewAuthRouter(authController, userController, menuController, permissionController, cfg, tokenRepository)
 	return authRouter
 }
