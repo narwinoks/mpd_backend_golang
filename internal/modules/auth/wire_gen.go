@@ -37,6 +37,6 @@ func InitializeAuthRouter(cfg *config.Config, db *gorm.DB) *AuthRouter {
 	permissionRepository := permission.NewPermissionRepository(db)
 	permissionService := permission2.NewPermissionService(permissionRepository, userRepository)
 	permissionController := controller.NewPermissionController(permissionService)
-	authRouter := NewAuthRouter(authController, userController, menuController, permissionController, cfg, tokenRepository)
+	authRouter := NewAuthRouter(authController, userController, menuController, permissionController, cfg, tokenRepository, permissionRepository, moduleRepository)
 	return authRouter
 }

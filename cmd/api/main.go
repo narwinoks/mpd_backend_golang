@@ -2,6 +2,7 @@ package main
 
 import (
 	"backend-app/config"
+	"backend-app/internal/core/cache"
 	"backend-app/internal/core/database"
 	"backend-app/internal/core/middleware"
 	"backend-app/internal/core/response"
@@ -27,6 +28,14 @@ func main() {
 	db, err := database.NewDatabase(cfg)
 	if err != nil {
 		logrus.Fatalf("failed to connect database: %v", err)
+	}
+
+	// 3.1 Initialize Redis (Optional)
+	rdb, err := database.NewRedisClient(cfg)
+	if err != nil {
+		logrus.Warnf("failed to initialize redis (using in-memory cache instead): %v", err)
+	} else if rdb != nil {
+		cache.GetCache().SetRedisClient(rdb)
 	}
 
 	// 4. Initialize Master Router using Wire

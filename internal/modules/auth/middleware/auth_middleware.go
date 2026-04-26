@@ -72,6 +72,7 @@ func AuthMiddleware(cfg *config.Config, tokenRepo personal_access_token.TokenRep
 
 		userID := uint32(claims["user_id"].(float64))
 		username := claims["username"].(string)
+		roleID := uint32(claims["role_id"].(float64))
 
 		var employeeID *uint32
 		if claims["employee_id"] != nil {
@@ -88,6 +89,7 @@ func AuthMiddleware(cfg *config.Config, tokenRepo personal_access_token.TokenRep
 		// Set to Gin context
 		c.Set("user_id", userID)
 		c.Set("username", username)
+		c.Set("role_id", roleID)
 		if employeeID != nil {
 			c.Set("employee_id", *employeeID)
 		}

@@ -51,6 +51,14 @@ func GlobalErrorHandler() gin.HandlerFunc {
 				return
 			}
 
+			// 2.3 Handle Custom ForbiddenError
+			var forbiddenErr exception.ForbiddenError
+			if errors.As(err, &forbiddenErr) {
+				SendError(c, Forbidden, forbiddenErr.Error())
+				c.Abort()
+				return
+			}
+
 			// 3. Handle Binding/Validation Errors (400)
 
 			// Case: Empty Body (EOF)

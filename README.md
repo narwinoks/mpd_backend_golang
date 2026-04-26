@@ -66,7 +66,48 @@ go run cmd/seeder/main.go
 ### 4. Dependency Injection
 Generate the wire injector code before running the app:
 ```bash
+wire ./internal/modules/auth
 wire ./internal/modules/master
+```
+
+## ⚡ Caching (Redis & In-Memory)
+This project features a unified cache store that supports both Redis and In-Memory fallback.
+
+### Redis Configuration
+Update `config/config.yaml` to enable Redis:
+```yaml
+redis:
+  enabled: true # Set to true to use Redis
+  host: "localhost"
+  port: 6379
+  password: ""
+  db: 0
+```
+If `enabled` is `false` or the connection fails, the system automatically falls back to **In-Memory** caching.
+
+## 🛡️ Authorization Middlewares
+We provide two specialized middlewares for granular access control, both utilizing the caching system for optimal performance.
+
+### 1. Permission Middleware
+Used to check for specific action permissions (stored in `app_permission_m`).
+
+**Example Usage in Router:**
+```go
+user.GET("/sensitive-data", 
+    middleware.AuthMiddleware(r.config, r.tokenRepo), 
+    middleware.PermissionMiddleware(r.permRepo, "USER_VIEW"), 
+    r.userController.GetProfile)
+```
+
+### 2. Module Middleware
+Used to check if a user has access to a specific application module (stored in `app_modules_m`).
+
+**Example Usage in Router:**
+```go
+user.GET("/admin-panel", 
+    middleware.AuthMiddleware(r.config, r.tokenRepo), 
+    middleware.ModuleMiddleware(r.moduleRepo, "MOD_ADMIN_MANAGEMENT"), 
+    r.userController.GetProfile)
 ```
 
 ## 🏃 Running the Project

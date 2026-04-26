@@ -57,6 +57,7 @@ func (s *authServiceImpl) Login(request *req.LoginRequest) (*res.LoginResponse, 
 	accessTokenClaims := &jwt.MapClaims{
 		"user_id":     user.ID,
 		"username":    user.Username,
+		"role_id":     user.RoleID,
 		"employee_id": user.EmployeeID,
 		"profile_id":  user.ProfileID,
 		"exp":         accessTokenExpiration.Unix(),
@@ -74,6 +75,7 @@ func (s *authServiceImpl) Login(request *req.LoginRequest) (*res.LoginResponse, 
 	refreshTokenClaims := &jwt.MapClaims{
 		"user_id":     user.ID,
 		"username":    user.Username,
+		"role_id":     user.RoleID,
 		"employee_id": user.EmployeeID,
 		"profile_id":  user.ProfileID,
 		"exp":         refreshTokenExpiration.Unix(),
@@ -178,6 +180,7 @@ func (s *authServiceImpl) RefreshToken(request *req.RefreshTokenRequest) (*res.L
 	accessTokenClaims := &jwt.MapClaims{
 		"user_id":     userID,
 		"username":    username,
+		"role_id":     user.RoleID,
 		"employee_id": user.EmployeeID,
 		"profile_id":  user.ProfileID,
 		"exp":         accessTokenExpiration.Unix(),
@@ -194,6 +197,7 @@ func (s *authServiceImpl) RefreshToken(request *req.RefreshTokenRequest) (*res.L
 	newRefreshTokenClaims := &jwt.MapClaims{
 		"user_id":     userID,
 		"username":    username,
+		"role_id":     user.RoleID,
 		"employee_id": user.EmployeeID,
 		"profile_id":  user.ProfileID,
 		"exp":         newRefreshTokenExpiration.Unix(),

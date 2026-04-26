@@ -2,26 +2,11 @@ role
 senior golang development
 
 context
-1.standart api
+1.make middleware check pemission user
+2.make middleware check module user can access 
+3.table access role_permission user_permission , role_module,user_modules
 
-for first
-if empty data dosent 
-sent
-{
-"rc": "200",
-"message": "Successfully",
-"data": null,
-"request_id": "019dc490-7149-70dd-ae1c-cec0071a9945"
-}
 
-or
-{
-"rc": "200",
-"message": "Successfully",
-"data": {
-"permissions": []
-},
-"request_id": "019dc48f-472a-7cd1-91df-59d6f37007a5"
-}
-
-please sent 404
+task
+1.make middleare and example use in route
+2.optimze query set in cache

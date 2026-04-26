@@ -17,6 +17,15 @@ type Config struct {
 	DatabaseTest DatabaseConfig `mapstructure:"database_test"`
 	Log          LogConfig      `mapstructure:"log"`
 	JWT          JWTConfig      `mapstructure:"jwt"`
+	Redis        RedisConfig    `mapstructure:"redis"`
+}
+
+type RedisConfig struct {
+	Enabled  bool   `mapstructure:"enabled"`
+	Host     string `mapstructure:"host"`
+	Port     int    `mapstructure:"port"`
+	Password string `mapstructure:"password"`
+	DB       int    `mapstructure:"db"`
 }
 
 type AppConfig struct {
