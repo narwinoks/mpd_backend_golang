@@ -60,10 +60,8 @@ func isEmpty(data interface{}) bool {
 		}
 		return isEmpty(v.Elem().Interface())
 	default:
-		panic("unhandled default case")
+		return false
 	}
-
-	return false
 }
 
 func SendError(c *gin.Context, status Status, errDetail interface{}) {
