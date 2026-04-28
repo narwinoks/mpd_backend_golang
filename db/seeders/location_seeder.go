@@ -78,15 +78,29 @@ func SeedLocations(db *gorm.DB) (*LocationState, error) {
 	villages := []struct {
 		Name          string
 		SubdistrictID uint32
+		CityID        uint32
+		ProvinceID    uint32
 	}{
-		{"Pasir Kaliki", state.SubdistrictIDs["Cicendo"]},
-		{"Arjuna", state.SubdistrictIDs["Cicendo"]},
+		{
+			Name:          "Pasir Kaliki",
+			SubdistrictID: state.SubdistrictIDs["Cicendo"],
+			CityID:        state.CityIDs["Kota Bandung"],
+			ProvinceID:    state.ProvinceIDs["Jawa Barat"],
+		},
+		{
+			Name:          "Arjuna",
+			SubdistrictID: state.SubdistrictIDs["Cicendo"],
+			CityID:        state.CityIDs["Kota Bandung"],
+			ProvinceID:    state.ProvinceIDs["Jawa Barat"],
+		},
 	}
 	for _, v := range villages {
 		m := location.Village{
 			BaseModel:     createBaseModel(1, nil),
 			SubdistrictID: v.SubdistrictID,
 			Village:       v.Name,
+			CityID:        v.CityID,
+			ProvinceID:    v.ProvinceID,
 		}
 		if err := db.Create(&m).Error; err != nil {
 			return nil, err

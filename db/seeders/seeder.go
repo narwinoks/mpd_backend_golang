@@ -42,6 +42,12 @@ func SeedAll(db *gorm.DB) error {
 			return fmt.Errorf("failed to seed auth: %w", err)
 		}
 
+		fmt.Println("Seeding Menu...")
+		err = SeedMenus(tx, profiles.ProfileID, employees)
+		if err != nil {
+			return fmt.Errorf("failed to seed menu: %w", err)
+		}
+
 		return nil
 	})
 }

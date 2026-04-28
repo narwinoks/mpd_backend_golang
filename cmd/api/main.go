@@ -51,6 +51,14 @@ func main() {
 	r.Use(middleware.LoggerMiddleware())
 	r.Use(response.GlobalErrorHandler())
 
+	// 6.1 Handle 404 & 405
+	r.NoRoute(func(c *gin.Context) {
+		response.SendError(c, response.PathNotFound, "The requested path was not found on this server")
+	})
+	r.NoMethod(func(c *gin.Context) {
+		response.SendError(c, response.MethodNotAllowed, "The requested method is not allowed for this path")
+	})
+
 	// 7. Register Routes
 	api := r.Group("/api/v1")
 	masterRouter.RegisterRoutes(api)

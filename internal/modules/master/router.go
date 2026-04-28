@@ -8,10 +8,17 @@ import (
 
 type MasterRouter struct {
 	userController *controller.UserController
+	roleController *controller.RoleController
 }
 
-func NewMasterRouter(userController *controller.UserController) *MasterRouter {
-	return &MasterRouter{userController: userController}
+func NewMasterRouter(
+	userController *controller.UserController,
+	roleController *controller.RoleController,
+) *MasterRouter {
+	return &MasterRouter{
+		userController: userController,
+		roleController: roleController,
+	}
 }
 
 func (r *MasterRouter) RegisterRoutes(rg *gin.RouterGroup) {
@@ -22,6 +29,15 @@ func (r *MasterRouter) RegisterRoutes(rg *gin.RouterGroup) {
 			users.GET("/", r.userController.FindAll)
 			users.GET("/:id", r.userController.FindByID)
 			users.POST("/", r.userController.Create)
+		}
+
+		roles := master.Group("/roles")
+		{
+			roles.GET("/", r.roleController.FindAll)
+			roles.GET("/:id", r.roleController.FindByID)
+			roles.POST("/", r.roleController.Create)
+			roles.PUT("/:id", r.roleController.Update)
+			roles.DELETE("/:id", r.roleController.Delete)
 		}
 	}
 }

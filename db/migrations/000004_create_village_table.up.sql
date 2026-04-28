@@ -16,11 +16,11 @@ CREATE TABLE villages_m (
      village VARCHAR(100)
 );
 
-ALTER TABLE village_m ADD CONSTRAINT fk_village_m_created_by FOREIGN KEY (created_by) REFERENCES employees_m(id) ON DELETE SET NULL;
-ALTER TABLE village_m ADD CONSTRAINT fk_village_m_updated_by FOREIGN KEY (updated_by) REFERENCES employees_m(id) ON DELETE SET NULL;
-ALTER TABLE village_m ADD CONSTRAINT fk_village_m_deleted_by FOREIGN KEY (deleted_by) REFERENCES employees_m(id) ON DELETE SET NULL;
-ALTER TABLE village_m ADD CONSTRAINT fk_village_m_profile_id FOREIGN KEY (profile_id) REFERENCES profiles_m(id) ON DELETE SET NULL;
+ALTER TABLE villages_m ADD CONSTRAINT fk_villages_m_created_by FOREIGN KEY (created_by) REFERENCES employees_m(id) ON DELETE SET NULL;
+ALTER TABLE villages_m ADD CONSTRAINT fk_villages_m_updated_by FOREIGN KEY (updated_by) REFERENCES employees_m(id) ON DELETE SET NULL;
+ALTER TABLE villages_m ADD CONSTRAINT fk_villages_m_deleted_by FOREIGN KEY (deleted_by) REFERENCES employees_m(id) ON DELETE SET NULL;
+ALTER TABLE villages_m ADD CONSTRAINT fk_villages_m_profile_id FOREIGN KEY (profile_id) REFERENCES profiles_m(id) ON DELETE SET NULL;
 
-ALTER TABLE village_m ADD CONSTRAINT fk_village_m_province_id FOREIGN KEY (province_id) REFERENCES provinces_m(id) ON DELETE SET NULL;
-ALTER TABLE village_m ADD CONSTRAINT fk_village_m_subdistrict_id FOREIGN KEY (subdistrict_id) REFERENCES subdistrict_m(id) ON DELETE SET NULL;
-ALTER TABLE village_m ADD CONSTRAINT fk_village_m_city FOREIGN KEY (city_id) REFERENCES cities_m(id) ON DELETE SET NULL;
+ALTER TABLE villages_m ADD CONSTRAINT fk_villages_m_province_id FOREIGN KEY (province_id) REFERENCES provinces_m(id) ON DELETE SET NULL;
+ALTER TABLE villages_m ADD CONSTRAINT fk_villages_m_subdistrict_id FOREIGN KEY (subdistrict_id) REFERENCES subdistrict_m(id) ON DELETE SET NULL;
+ALTER TABLE villages_m ADD CONSTRAINT fk_villages_m_city FOREIGN KEY (city_id) REFERENCES cities_m(id) ON DELETE SET NULL;

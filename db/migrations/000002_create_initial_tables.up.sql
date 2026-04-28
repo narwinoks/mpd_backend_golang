@@ -299,7 +299,7 @@ CREATE TABLE app_menus_m (
     deleted_by INTEGER,
     app_module_id INTEGER,
     parent_id INTEGER,
-    code VARCHAR(20),
+    code VARCHAR(100),
     name VARCHAR(100),
     path VARCHAR(255),
     description TEXT,

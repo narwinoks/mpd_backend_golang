@@ -11,10 +11,11 @@ type WebResponse struct {
 	Message   string      `json:"message"`
 	Data      interface{} `json:"data,omitempty"`
 	Errors    interface{} `json:"errors,omitempty"`
+	Meta      interface{} `json:"meta,omitempty"`
 	RequestID string      `json:"request_id"`
 }
 
-func SendSuccess(c *gin.Context, status Status, data interface{}) {
+func SendSuccess(c *gin.Context, status Status, data interface{}, meta ...interface{}) {
 	if isEmpty(data) {
 		SendError(c, DataNotFound, "")
 		return
@@ -23,10 +24,18 @@ func SendSuccess(c *gin.Context, status Status, data interface{}) {
 	requestID, _ := c.Get("request_id")
 	requestIDStr, _ := requestID.(string)
 
+	var metaData interface{}
+	if len(meta) == 1 {
+		metaData = meta[0]
+	} else if len(meta) > 1 {
+		metaData = meta
+	}
+
 	c.JSON(status.HttpCode, WebResponse{
 		RC:        status.RC,
 		Message:   status.Message,
 		Data:      data,
+		Meta:      metaData,
 		RequestID: requestIDStr,
 	})
 }
@@ -50,9 +59,10 @@ func isEmpty(data interface{}) bool {
 			return true
 		}
 		return isEmpty(v.Elem().Interface())
+	default:
+		panic("unhandled default case")
 	}
 
-	// For other types like string, int, etc., consider not empty unless we want to check zero values
 	return false
 }
 
