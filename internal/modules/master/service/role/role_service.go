@@ -8,7 +8,7 @@ import (
 )
 
 type RoleService interface {
-	GetAll(ctx context.Context, request pagination.Request) ([]res.RoleResponse, *pagination.Meta, error)
+	GetAll(ctx context.Context, request pagination.BaseRequest) ([]res.RoleResponse, *pagination.Meta, error)
 	GetByID(ctx context.Context, id string) (*res.RoleResponse, error)
 	Create(ctx context.Context, request req.CreateRoleRequest) (*res.RoleResponse, error)
 	Update(ctx context.Context, id string, request req.UpdateRoleRequest) (*res.RoleResponse, error)

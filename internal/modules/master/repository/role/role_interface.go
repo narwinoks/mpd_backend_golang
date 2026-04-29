@@ -7,7 +7,7 @@ import (
 )
 
 type RoleRepository interface {
-	FindAll(ctx context.Context, pagination pagination.Request) ([]role.Role, int64, error)
+	FindAll(ctx context.Context, pagination pagination.BaseRequest) ([]role.Role, int64, error)
 	FindByID(ctx context.Context, id uint32) (*role.Role, error)
 	Create(ctx context.Context, role *role.Role) error
 	Update(ctx context.Context, role *role.Role) error

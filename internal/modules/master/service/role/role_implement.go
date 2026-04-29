@@ -22,7 +22,7 @@ func NewRoleService(repo repo.RoleRepository) RoleService {
 	}
 }
 
-func (s *roleServiceImpl) GetAll(ctx context.Context, request pagination.Request) ([]res.RoleResponse, *pagination.Meta, error) {
+func (s *roleServiceImpl) GetAll(ctx context.Context, request pagination.BaseRequest) ([]res.RoleResponse, *pagination.Meta, error) {
 	roles, total, err := s.repo.FindAll(ctx, request)
 	if err != nil {
 		logrus.Errorf("Failed to fetch roles: %v", err)

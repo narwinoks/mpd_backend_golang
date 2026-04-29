@@ -21,13 +21,14 @@ type RoleWithCount struct {
 	TotalCount int64 `gorm:"column:total_count"`
 }
 
-func (r *roleRepositoryImpl) FindAll(ctx context.Context, req pagination.Request) ([]role.Role, int64, error) {
+func (r *roleRepositoryImpl) FindAll(ctx context.Context, req pagination.BaseRequest) ([]role.Role, int64, error) {
 	var results []RoleWithCount
 	var roles []role.Role
 	var total int64
 
 	err := r.db.WithContext(ctx).Model(&role.Role{}).
 		Scopes(pagination.PaginateScope(req)).
+		Scopes(req.SearchScope("role")).
 		Find(&results).Error
 
 	if err != nil {

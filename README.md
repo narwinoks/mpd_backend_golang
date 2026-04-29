@@ -110,6 +110,30 @@ user.GET("/admin-panel",
     r.userController.GetProfile)
 ```
 
+## 🔍 Filtering & Pagination
+The project uses GORM Scopes for dynamic filtering and pagination via `pkg/pagination/base_request.go`.
+
+### Custom Search Method (SearchScope)
+You can apply fuzzy search (ILIKE) across multiple columns using the `SearchScope` method on `BaseRequest`.
+
+**Example in Repository:**
+```go
+func (r *repositoryImpl) FindAll(ctx context.Context, req pagination.BaseRequest) ([]Entity, int64, error) {
+    var results []Entity
+    var total int64
+
+    query := r.db.WithContext(ctx).Model(&Entity{})
+
+    // Apply dynamic search on multiple columns (Custom Method)
+    query = query.Scopes(req.SearchScope("name", "code", "description"))
+
+    // Apply pagination
+    err := query.Scopes(pagination.PaginateScope(req)).Find(&results).Error
+    
+    // ...
+}
+```
+
 ## 🏃 Running the Project
 
 ### Development Mode (with Hot Reload)

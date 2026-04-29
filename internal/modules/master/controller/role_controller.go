@@ -17,7 +17,7 @@ func NewRoleController(roleService role.RoleService) *RoleController {
 	return &RoleController{roleService: roleService}
 }
 func (h *RoleController) FindAll(c *gin.Context) {
-	var paginateReq pagination.Request
+	var paginateReq pagination.BaseRequest
 	if err := c.ShouldBindQuery(&paginateReq); err != nil {
 		c.Error(err)
 		return
