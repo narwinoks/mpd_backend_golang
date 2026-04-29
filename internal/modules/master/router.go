@@ -1,6 +1,9 @@
 package master
 
 import (
+	"backend-app/config"
+	"backend-app/internal/modules/auth/middleware"
+	"backend-app/internal/modules/auth/repository/personal_access_token"
 	"backend-app/internal/modules/master/controller"
 
 	"github.com/gin-gonic/gin"
@@ -9,20 +12,26 @@ import (
 type MasterRouter struct {
 	userController *controller.UserController
 	roleController *controller.RoleController
+	config         *config.Config
+	tokenRepo      personal_access_token.TokenRepository
 }
 
 func NewMasterRouter(
 	userController *controller.UserController,
 	roleController *controller.RoleController,
+	config *config.Config,
+	tokenRepo personal_access_token.TokenRepository,
 ) *MasterRouter {
 	return &MasterRouter{
 		userController: userController,
 		roleController: roleController,
+		config:         config,
+		tokenRepo:      tokenRepo,
 	}
 }
 
 func (r *MasterRouter) RegisterRoutes(rg *gin.RouterGroup) {
-	master := rg.Group("/master")
+	master := rg.Group("/master", middleware.AuthMiddleware(r.config, r.tokenRepo))
 	{
 		users := master.Group("/users")
 		{

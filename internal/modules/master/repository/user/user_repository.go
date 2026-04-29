@@ -2,6 +2,7 @@ package user
 
 import (
 	"backend-app/internal/modules/auth/models"
+	"context"
 	"errors"
 
 	"gorm.io/gorm"
@@ -15,28 +16,28 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 	return &userRepositoryImpl{db: db}
 }
 
-func (r *userRepositoryImpl) FindAll() ([]models.User, error) {
+func (r *userRepositoryImpl) FindAll(ctx context.Context) ([]models.User, error) {
 	var users []models.User
-	if err := r.db.Find(&users).Error; err != nil {
+	if err := r.db.WithContext(ctx).Find(&users).Error; err != nil {
 		return nil, err
 	}
 	return users, nil
 }
 
-func (r *userRepositoryImpl) FindByID(id uint) (*models.User, error) {
+func (r *userRepositoryImpl) FindByID(ctx context.Context, id uint) (*models.User, error) {
 	var user models.User
-	if err := r.db.First(&user, id).Error; err != nil {
+	if err := r.db.WithContext(ctx).First(&user, id).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil
 }
 
-func (r *userRepositoryImpl) Create(user *models.User) error {
-	return r.db.Create(user).Error
+func (r *userRepositoryImpl) Create(ctx context.Context, user *models.User) error {
+	return r.db.WithContext(ctx).Create(user).Error
 }
-func (r *userRepositoryImpl) FindByUsername(username string) (bool, error) {
+func (r *userRepositoryImpl) FindByUsername(ctx context.Context, username string) (bool, error) {
 	var user models.User
-	result := r.db.Where("username = ?", username).First(&user)
+	result := r.db.WithContext(ctx).Where("username = ?", username).First(&user)
 
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
@@ -48,9 +49,9 @@ func (r *userRepositoryImpl) FindByUsername(username string) (bool, error) {
 	return true, nil
 }
 
-func (r *userRepositoryImpl) FindByEmail(email string) (bool, error) {
+func (r *userRepositoryImpl) FindByEmail(ctx context.Context, email string) (bool, error) {
 	var user models.User
-	result := r.db.Where("email = ?", email).First(&user)
+	result := r.db.WithContext(ctx).Where("email = ?", email).First(&user)
 
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
@@ -62,12 +63,12 @@ func (r *userRepositoryImpl) FindByEmail(email string) (bool, error) {
 	return true, nil
 }
 
-func (r *userRepositoryImpl) FindByNIP(nip string) (bool, error) {
+func (r *userRepositoryImpl) FindByNIP(ctx context.Context, nip string) (bool, error) {
 	if nip == "" {
 		return false, nil
 	}
 	var user models.User
-	result := r.db.Where("nip = ?", nip).First(&user)
+	result := r.db.WithContext(ctx).Where("nip = ?", nip).First(&user)
 
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {

@@ -5,7 +5,6 @@ import (
 	req "backend-app/internal/modules/master/request/role"
 	"backend-app/internal/modules/master/service/role"
 	"backend-app/pkg/pagination"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,7 +16,6 @@ type RoleController struct {
 func NewRoleController(roleService role.RoleService) *RoleController {
 	return &RoleController{roleService: roleService}
 }
-
 func (h *RoleController) FindAll(c *gin.Context) {
 	var paginateReq pagination.Request
 	if err := c.ShouldBindQuery(&paginateReq); err != nil {
@@ -25,7 +23,7 @@ func (h *RoleController) FindAll(c *gin.Context) {
 		return
 	}
 
-	roles, meta, err := h.roleService.GetAll(paginateReq)
+	roles, meta, err := h.roleService.GetAll(c.Request.Context(), paginateReq)
 	if err != nil {
 		c.Error(err)
 		return
@@ -34,14 +32,9 @@ func (h *RoleController) FindAll(c *gin.Context) {
 }
 
 func (h *RoleController) FindByID(c *gin.Context) {
-	idStr := c.Param("id")
-	id, err := strconv.ParseUint(idStr, 10, 32)
-	if err != nil {
-		c.Error(err)
-		return
-	}
+	id := c.Param("id")
 
-	res, err := h.roleService.GetByID(uint32(id))
+	res, err := h.roleService.GetByID(c.Request.Context(), id)
 	if err != nil {
 		c.Error(err)
 		return
@@ -57,7 +50,7 @@ func (h *RoleController) Create(c *gin.Context) {
 		return
 	}
 
-	res, err := h.roleService.Create(roleReq)
+	res, err := h.roleService.Create(c.Request.Context(), roleReq)
 	if err != nil {
 		c.Error(err)
 		return
@@ -66,20 +59,14 @@ func (h *RoleController) Create(c *gin.Context) {
 }
 
 func (h *RoleController) Update(c *gin.Context) {
-	idStr := c.Param("id")
-	id, err := strconv.ParseUint(idStr, 10, 32)
-	if err != nil {
-		c.Error(err)
-		return
-	}
-
+	id := c.Param("id")
 	var roleReq req.UpdateRoleRequest
 	if err := c.ShouldBindJSON(&roleReq); err != nil {
 		c.Error(err)
 		return
 	}
 
-	res, err := h.roleService.Update(uint32(id), roleReq)
+	res, err := h.roleService.Update(c.Request.Context(), id, roleReq)
 	if err != nil {
 		c.Error(err)
 		return
@@ -88,14 +75,9 @@ func (h *RoleController) Update(c *gin.Context) {
 }
 
 func (h *RoleController) Delete(c *gin.Context) {
-	idStr := c.Param("id")
-	id, err := strconv.ParseUint(idStr, 10, 32)
-	if err != nil {
-		c.Error(err)
-		return
-	}
+	id := c.Param("id")
 
-	err = h.roleService.Delete(uint32(id))
+	err := h.roleService.Delete(c.Request.Context(), id)
 	if err != nil {
 		c.Error(err)
 		return

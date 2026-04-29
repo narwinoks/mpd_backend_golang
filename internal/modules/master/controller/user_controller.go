@@ -18,7 +18,7 @@ func NewUserController(userService user.UserService) *UserController {
 }
 
 func (h *UserController) FindAll(c *gin.Context) {
-	users, err := h.userService.GetAllUsers()
+	users, err := h.userService.GetAllUsers(c.Request.Context())
 	if err != nil {
 		c.Error(err)
 		return
@@ -34,7 +34,7 @@ func (h *UserController) FindByID(c *gin.Context) {
 		return
 	}
 
-	res, err := h.userService.GetUserByID(uint(id))
+	res, err := h.userService.GetUserByID(c.Request.Context(), uint(id))
 	if err != nil {
 		c.Error(err)
 		return
@@ -50,7 +50,7 @@ func (h *UserController) Create(c *gin.Context) {
 		return
 	}
 
-	res, err := h.userService.CreateUser(&userReq)
+	res, err := h.userService.CreateUser(c.Request.Context(), &userReq)
 	if err != nil {
 		c.Error(err)
 		return

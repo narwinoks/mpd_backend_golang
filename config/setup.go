@@ -18,6 +18,13 @@ type Config struct {
 	Log          LogConfig      `mapstructure:"log"`
 	JWT          JWTConfig      `mapstructure:"jwt"`
 	Redis        RedisConfig    `mapstructure:"redis"`
+	CORS         CORSConfig     `mapstructure:"cors"`
+}
+
+type CORSConfig struct {
+	AllowedOrigins []string `mapstructure:"allowed_origins"`
+	AllowedMethods []string `mapstructure:"allowed_methods"`
+	AllowedHeaders []string `mapstructure:"allowed_headers"`
 }
 
 type RedisConfig struct {

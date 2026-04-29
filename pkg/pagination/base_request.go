@@ -50,6 +50,8 @@ func PaginateScope(req Request) func(db *gorm.DB) *gorm.DB {
 		}
 
 		offset := (req.Page - 1) * req.Paginate
-		return db.Offset(offset).Limit(req.Paginate)
+		return db.Select("*, COUNT(*) OVER() AS total_count").
+			Offset(offset).
+			Limit(req.Paginate)
 	}
 }

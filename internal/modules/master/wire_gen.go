@@ -8,6 +8,7 @@ package master
 
 import (
 	"backend-app/config"
+	"backend-app/internal/modules/auth/repository/personal_access_token"
 	"backend-app/internal/modules/master/controller"
 	"backend-app/internal/modules/master/repository/role"
 	"backend-app/internal/modules/master/repository/user"
@@ -25,6 +26,7 @@ func InitializeMasterRouter(cfg *config.Config, db *gorm.DB) *MasterRouter {
 	roleRepository := role.NewRoleRepository(db)
 	roleService := role2.NewRoleService(roleRepository)
 	roleController := controller.NewRoleController(roleService)
-	masterRouter := NewMasterRouter(userController, roleController)
+	tokenRepository := personal_access_token.NewTokenRepository(db)
+	masterRouter := NewMasterRouter(userController, roleController, cfg, tokenRepository)
 	return masterRouter
 }

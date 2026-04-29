@@ -3,6 +3,7 @@ package role
 import (
 	"backend-app/internal/modules/master/model/role"
 	"backend-app/pkg/pagination"
+	"context"
 
 	"gorm.io/gorm"
 )
@@ -15,40 +16,64 @@ func NewRoleRepository(db *gorm.DB) RoleRepository {
 	return &roleRepositoryImpl{db: db}
 }
 
-func (r *roleRepositoryImpl) FindAll(req pagination.Request) ([]role.Role, int64, error) {
+type RoleWithCount struct {
+	role.Role
+	TotalCount int64 `gorm:"column:total_count"`
+}
+
+func (r *roleRepositoryImpl) FindAll(ctx context.Context, req pagination.Request) ([]role.Role, int64, error) {
+	var results []RoleWithCount
 	var roles []role.Role
 	var total int64
 
-	db := r.db.Model(&role.Role{})
+	err := r.db.WithContext(ctx).Model(&role.Role{}).
+		Scopes(pagination.PaginateScope(req)).
+		Find(&results).Error
 
-	if err := db.Count(&total).Error; err != nil {
+	if err != nil {
 		return nil, 0, err
 	}
 
-	err := db.Scopes(pagination.PaginateScope(req)).
-		Select("id", "role", "created_at", "updated_at").
-		Find(&roles).Error
+	if len(results) > 0 {
+		total = results[0].TotalCount
+		for _, res := range results {
+			roles = append(roles, res.Role)
+		}
+	}
 
-	return roles, total, err
+	return roles, total, nil
 }
 
-func (r *roleRepositoryImpl) FindByID(id uint32) (*role.Role, error) {
+func (r *roleRepositoryImpl) FindByID(ctx context.Context, id uint32) (*role.Role, error) {
 	var roleEntity role.Role
-	err := r.db.Select("id", "role", "created_at", "updated_at").First(&roleEntity, id).Error
+	err := r.db.WithContext(ctx).Select("id", "role", "created_at", "updated_at").First(&roleEntity, id).Error
 	if err != nil {
 		return nil, err
 	}
 	return &roleEntity, nil
 }
 
-func (r *roleRepositoryImpl) Create(roleEntity *role.Role) error {
-	return r.db.Create(roleEntity).Error
+func (r *roleRepositoryImpl) Create(ctx context.Context, roleEntity *role.Role) error {
+	return r.db.WithContext(ctx).Create(roleEntity).Error
 }
 
-func (r *roleRepositoryImpl) Update(roleEntity *role.Role) error {
-	return r.db.Save(roleEntity).Error
+func (r *roleRepositoryImpl) Update(ctx context.Context, roleEntity *role.Role) error {
+	return r.db.WithContext(ctx).Save(roleEntity).Error
 }
 
-func (r *roleRepositoryImpl) Delete(id uint32) error {
-	return r.db.Delete(&role.Role{}, id).Error
+func (r *roleRepositoryImpl) Delete(ctx context.Context, id uint32) error {
+	var roleEntity role.Role
+	if err := r.db.WithContext(ctx).First(&roleEntity, id).Error; err != nil {
+		return err
+	}
+	return roleEntity.SetNonActive(r.db.WithContext(ctx))
+}
+
+func (r *roleRepositoryImpl) FindByUuid(ctx context.Context, Uuid string) (*role.Role, error) {
+	var roleEntity role.Role
+	err := r.db.WithContext(ctx).Select("id", "uuid", "role", "created_at", "updated_at").Where("uuid = ?", Uuid).First(&roleEntity).Error
+	if err != nil {
+		return nil, err
+	}
+	return &roleEntity, nil
 }

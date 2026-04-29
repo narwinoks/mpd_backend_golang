@@ -47,6 +47,6 @@ var (
 	TooManyRequests = Status{http.StatusTooManyRequests, "429", "Too Many Requests"}
 
 	// 500 Server Error
-	InternalServerError = Status{http.StatusInternalServerError, "500", "Terjadi kesalahan pada sistem. Silakan coba lagi nanti."}
+	InternalServerError = Status{http.StatusInternalServerError, "500", "Internal Server Error."}
 	DataBridgingNotSend = Status{http.StatusInternalServerError, "500", "Send Data Bridging Failed"}
 )

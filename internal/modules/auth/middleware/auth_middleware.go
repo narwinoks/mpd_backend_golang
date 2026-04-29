@@ -99,6 +99,7 @@ func AuthMiddleware(cfg *config.Config, tokenRepo personal_access_token.TokenRep
 
 		// Also set to standard context for GORM hooks
 		ctx := c.Request.Context()
+		ctx = context.WithValue(ctx, "user_id", userID)
 		if employeeID != nil {
 			ctx = context.WithValue(ctx, "employee_id", *employeeID)
 		}

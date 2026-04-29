@@ -28,13 +28,23 @@ func (m *BaseModel) BeforeCreate(tx *gorm.DB) (err error) {
 
 	ctx := tx.Statement.Context
 	if ctx != nil {
+		var executorID uint32
 		if employeeID, ok := ctx.Value("employee_id").(uint32); ok {
-			m.CreatedBy = &employeeID
-			m.UpdatedBy = &employeeID
+			executorID = employeeID
+		} else if userID, ok := ctx.Value("user_id").(uint32); ok {
+			executorID = userID
+		}
+
+		if executorID != 0 {
+			m.CreatedBy = new(uint32)
+			*m.CreatedBy = executorID
+			m.UpdatedBy = new(uint32)
+			*m.UpdatedBy = executorID
 		}
 
 		if profileID, ok := ctx.Value("profile_id").(uint32); ok {
-			m.ProfileID = &profileID
+			m.ProfileID = new(uint32)
+			*m.ProfileID = profileID
 		}
 
 		if externalCode, ok := ctx.Value("external_code").(string); ok {
@@ -47,8 +57,16 @@ func (m *BaseModel) BeforeCreate(tx *gorm.DB) (err error) {
 func (m *BaseModel) BeforeUpdate(tx *gorm.DB) (err error) {
 	ctx := tx.Statement.Context
 	if ctx != nil {
+		var executorID uint32
 		if employeeID, ok := ctx.Value("employee_id").(uint32); ok {
-			m.UpdatedBy = &employeeID
+			executorID = employeeID
+		} else if userID, ok := ctx.Value("user_id").(uint32); ok {
+			executorID = userID
+		}
+
+		if executorID != 0 {
+			m.UpdatedBy = new(uint32)
+			*m.UpdatedBy = executorID
 		}
 	}
 	return
@@ -57,8 +75,16 @@ func (m *BaseModel) BeforeUpdate(tx *gorm.DB) (err error) {
 func (m *BaseModel) BeforeDelete(tx *gorm.DB) (err error) {
 	ctx := tx.Statement.Context
 	if ctx != nil {
+		var executorID uint32
 		if employeeID, ok := ctx.Value("employee_id").(uint32); ok {
-			m.DeletedBy = &employeeID
+			executorID = employeeID
+		} else if userID, ok := ctx.Value("user_id").(uint32); ok {
+			executorID = userID
+		}
+
+		if executorID != 0 {
+			m.DeletedBy = new(uint32)
+			*m.DeletedBy = executorID
 		}
 	}
 	return
@@ -67,8 +93,16 @@ func (m *BaseModel) BeforeDelete(tx *gorm.DB) (err error) {
 func (m *BaseModel) SetNonActive(tx *gorm.DB) error {
 	ctx := tx.Statement.Context
 	if ctx != nil {
+		var executorID uint32
 		if employeeID, ok := ctx.Value("employee_id").(uint32); ok {
-			m.DeletedBy = &employeeID
+			executorID = employeeID
+		} else if userID, ok := ctx.Value("user_id").(uint32); ok {
+			executorID = userID
+		}
+
+		if executorID != 0 {
+			m.DeletedBy = new(uint32)
+			*m.DeletedBy = executorID
 		}
 	}
 	m.IsActive = false
