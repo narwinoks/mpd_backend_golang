@@ -9,6 +9,7 @@ package auth
 import (
 	"backend-app/config"
 	"backend-app/internal/modules/auth/controller"
+	"backend-app/internal/modules/auth/middleware"
 	"backend-app/internal/modules/auth/repository/menu"
 	"backend-app/internal/modules/auth/repository/module"
 	"backend-app/internal/modules/auth/repository/permission"
@@ -37,6 +38,9 @@ func InitializeAuthRouter(cfg *config.Config, db *gorm.DB) *AuthRouter {
 	permissionRepository := permission.NewPermissionRepository(db)
 	permissionService := permission2.NewPermissionService(permissionRepository, userRepository)
 	permissionController := controller.NewPermissionController(permissionService)
-	authRouter := NewAuthRouter(authController, userController, menuController, permissionController, cfg, tokenRepository, permissionRepository, moduleRepository)
+	authMiddleware := middleware.NewAuthMiddleware(cfg, tokenRepository)
+	moduleMiddleware := middleware.NewModuleMiddleware(moduleRepository)
+	permissionMiddleware := middleware.NewPermissionMiddleware(permissionRepository)
+	authRouter := NewAuthRouter(authController, userController, menuController, permissionController, authMiddleware, moduleMiddleware, permissionMiddleware)
 	return authRouter
 }

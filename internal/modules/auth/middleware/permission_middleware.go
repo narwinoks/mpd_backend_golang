@@ -10,7 +10,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func PermissionMiddleware(repo permission.PermissionRepository, requiredPermission string) gin.HandlerFunc {
+type PermissionMiddleware struct {
+	repo permission.PermissionRepository
+}
+
+func NewPermissionMiddleware(repo permission.PermissionRepository) *PermissionMiddleware {
+	return &PermissionMiddleware{repo: repo}
+}
+
+func (m *PermissionMiddleware) Handle(requiredPermission string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		userIDVal, exists := c.Get("user_id")
 		if !exists {
@@ -35,7 +43,7 @@ func PermissionMiddleware(repo permission.PermissionRepository, requiredPermissi
 		var permissions []string
 		if found := cacher.Get(cacheKey, &permissions); !found {
 			var err error
-			permissions, err = repo.GetUserPermissions(userID, roleID)
+			permissions, err = m.repo.GetUserPermissions(userID, roleID)
 			if err != nil {
 				c.Error(err)
 				c.Abort()

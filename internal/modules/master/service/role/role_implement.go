@@ -107,7 +107,6 @@ func (s *roleServiceImpl) Delete(ctx context.Context, id string) error {
 		logrus.Errorf("Role not found for deletion with id %s: %v", id, err)
 		return exception.NewNotFoundError("Data not found")
 	}
-
 	err = s.repo.Delete(ctx, role.ID)
 	if err != nil {
 		logrus.Errorf("Failed to delete role: %v", err)

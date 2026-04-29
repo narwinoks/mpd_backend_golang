@@ -9,6 +9,7 @@ import (
 type Request struct {
 	Page     int `form:"page,default=1"`
 	Paginate int `form:"paginate,default=10"`
+	Search   int `form:"search,default=''"`
 }
 
 type Meta struct {

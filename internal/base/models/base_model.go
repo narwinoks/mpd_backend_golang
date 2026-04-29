@@ -107,5 +107,10 @@ func (m *BaseModel) SetNonActive(tx *gorm.DB) error {
 	}
 	m.IsActive = false
 	m.DeletedAt = gorm.DeletedAt{Time: time.Now(), Valid: true}
+
+	if tx.Statement.Model != nil {
+		return tx.Save(tx.Statement.Model).Error
+	}
+
 	return tx.Save(m).Error
 }

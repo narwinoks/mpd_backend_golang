@@ -46,7 +46,7 @@ func (r *roleRepositoryImpl) FindAll(ctx context.Context, req pagination.Request
 
 func (r *roleRepositoryImpl) FindByID(ctx context.Context, id uint32) (*role.Role, error) {
 	var roleEntity role.Role
-	err := r.db.WithContext(ctx).Select("id", "role", "created_at", "updated_at").First(&roleEntity, id).Error
+	err := r.db.WithContext(ctx).Select("id", "role", "is_active", "created_at", "updated_at").First(&roleEntity, id).Error
 	if err != nil {
 		return nil, err
 	}
@@ -66,12 +66,12 @@ func (r *roleRepositoryImpl) Delete(ctx context.Context, id uint32) error {
 	if err := r.db.WithContext(ctx).First(&roleEntity, id).Error; err != nil {
 		return err
 	}
-	return roleEntity.SetNonActive(r.db.WithContext(ctx))
+	return roleEntity.SetNonActive(r.db.WithContext(ctx).Model(&roleEntity))
 }
 
 func (r *roleRepositoryImpl) FindByUuid(ctx context.Context, Uuid string) (*role.Role, error) {
 	var roleEntity role.Role
-	err := r.db.WithContext(ctx).Select("id", "uuid", "role", "created_at", "updated_at").Where("uuid = ?", Uuid).First(&roleEntity).Error
+	err := r.db.WithContext(ctx).Select("id", "uuid", "role", "is_active", "created_at", "updated_at").Where("uuid = ?", Uuid).First(&roleEntity).Error
 	if err != nil {
 		return nil, err
 	}

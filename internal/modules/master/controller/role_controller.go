@@ -82,5 +82,5 @@ func (h *RoleController) Delete(c *gin.Context) {
 		c.Error(err)
 		return
 	}
-	response.SendSuccess(c, response.SuccessDelete, nil)
+	response.SendSuccess(c, response.SuccessDelete, "")
 }

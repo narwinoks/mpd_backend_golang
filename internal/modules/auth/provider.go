@@ -2,6 +2,7 @@ package auth
 
 import (
 	"backend-app/internal/modules/auth/controller"
+	"backend-app/internal/modules/auth/middleware"
 	repoMenu "backend-app/internal/modules/auth/repository/menu"
 	repoModule "backend-app/internal/modules/auth/repository/module"
 	repoPerm "backend-app/internal/modules/auth/repository/permission"
@@ -29,5 +30,8 @@ var AuthProviderSet = wire.NewSet(
 	controller.NewUserController,
 	controller.NewMenuController,
 	controller.NewPermissionController,
+	middleware.NewAuthMiddleware,
+	middleware.NewModuleMiddleware,
+	middleware.NewPermissionMiddleware,
 	NewAuthRouter,
 )

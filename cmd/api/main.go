@@ -15,22 +15,22 @@ import (
 )
 
 func main() {
-	// 1. Load Config
+	// Load Config
 	cfg, err := config.LoadConfig()
 	if err != nil {
 		panic(fmt.Sprintf("failed to load config: %v", err))
 	}
 
-	// 2. Setup Logging
+	// Setup Logging
 	config.SetupLog(&cfg.Log)
 
-	// 3. Initialize Database
+	// Initialize Database
 	db, err := database.NewDatabase(cfg)
 	if err != nil {
 		logrus.Fatalf("failed to connect database: %v", err)
 	}
 
-	// 3.1 Initialize Redis (Optional)
+	// Initialize Redis (Optional)
 	rdb, err := database.NewRedisClient(cfg)
 	if err != nil {
 		logrus.Warnf("failed to initialize redis (using in-memory cache instead): %v", err)
@@ -38,21 +38,21 @@ func main() {
 		cache.GetCache().SetRedisClient(rdb)
 	}
 
-	// 4. Initialize Master Router using Wire
-	masterRouter := master.InitializeMasterRouter(cfg, db)
+	// Initialize Routers using Wire
 	authRouter := auth.InitializeAuthRouter(cfg, db)
+	masterRouter := master.InitializeMasterRouter(cfg, db)
 
-	// 5. Setup Gin
+	//  Setup Gin
 	r := gin.New()
 	r.Use(gin.Recovery())
 
-	// 6. Global Middleware
+	//  Global Middleware
 	r.Use(middleware.CORSMiddleware(&cfg.CORS))
 	r.Use(middleware.ResponseIDMiddleware())
 	r.Use(middleware.LoggerMiddleware())
 	r.Use(response.GlobalErrorHandler())
 
-	// 6.1 Handle 404 & 405
+	// Handle 404 & 405
 	r.NoRoute(func(c *gin.Context) {
 		response.SendError(c, response.PathNotFound, "The requested path was not found on this server")
 	})
@@ -60,12 +60,20 @@ func main() {
 		response.SendError(c, response.MethodNotAllowed, "The requested method is not allowed for this path")
 	})
 
-	// 7. Register Routes
+	// Register Routes
 	api := r.Group("/api/v1")
-	masterRouter.RegisterRoutes(api)
+
+	// Auth routes (some are public like /login)
 	authRouter.RegisterRoutes(api)
 
-	// 8. Start Server
+	// Protected routes (Master module)
+	protectedGroup := api.Group("")
+	protectedGroup.Use(authRouter.AuthMiddleware.Handle())
+	{
+		masterRouter.RegisterRoutes(protectedGroup)
+	}
+
+	// Start Server
 	logrus.Infof("Starting %s on port %d...", cfg.App.Name, cfg.App.Port)
 	if err := r.Run(fmt.Sprintf(":%d", cfg.App.Port)); err != nil {
 		logrus.Fatalf("failed to start server: %v", err)

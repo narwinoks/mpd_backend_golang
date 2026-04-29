@@ -12,7 +12,19 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func AuthMiddleware(cfg *config.Config, tokenRepo personal_access_token.TokenRepository) gin.HandlerFunc {
+type AuthMiddleware struct {
+	config    *config.Config
+	tokenRepo personal_access_token.TokenRepository
+}
+
+func NewAuthMiddleware(cfg *config.Config, tokenRepo personal_access_token.TokenRepository) *AuthMiddleware {
+	return &AuthMiddleware{
+		config:    cfg,
+		tokenRepo: tokenRepo,
+	}
+}
+
+func (m *AuthMiddleware) Handle() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
@@ -35,7 +47,7 @@ func AuthMiddleware(cfg *config.Config, tokenRepo personal_access_token.TokenRep
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 			}
-			return []byte(cfg.JWT.Secret), nil
+			return []byte(m.config.JWT.Secret), nil
 		})
 
 		if err != nil || !token.Valid {
@@ -52,7 +64,7 @@ func AuthMiddleware(cfg *config.Config, tokenRepo personal_access_token.TokenRep
 		}
 
 		// Check if token is revoked
-		isRevoked, err := tokenRepo.IsRevoked(tokenString)
+		isRevoked, err := m.tokenRepo.IsRevoked(tokenString)
 		if err != nil {
 			c.Error(fmt.Errorf("failed to check token status: %v", err))
 			c.Abort()
@@ -63,12 +75,6 @@ func AuthMiddleware(cfg *config.Config, tokenRepo personal_access_token.TokenRep
 			c.Abort()
 			return
 		}
-
-		// Check if token exists in DB (to ensure it was issued by us if we want to be strict)
-		// but IsRevoked already checks this and returns false if not found.
-		// However, my current IsRevoked implementation returns false if NOT FOUND.
-		// If we want to be strict, we should ensure it exists.
-		// Let's refine IsRevoked or add a CheckExists.
 
 		userID := uint32(claims["user_id"].(float64))
 		username := claims["username"].(string)
@@ -106,7 +112,7 @@ func AuthMiddleware(cfg *config.Config, tokenRepo personal_access_token.TokenRep
 		if profileID != nil {
 			ctx = context.WithValue(ctx, "profile_id", *profileID)
 		}
-		ctx = context.WithValue(ctx, "external_code", cfg.App.ExternalCode)
+		ctx = context.WithValue(ctx, "external_code", m.config.App.ExternalCode)
 		c.Request = c.Request.WithContext(ctx)
 
 		c.Next()
