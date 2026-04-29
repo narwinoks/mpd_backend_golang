@@ -9,8 +9,12 @@ package master
 import (
 	"backend-app/config"
 	"backend-app/internal/modules/master/controller"
+	"backend-app/internal/modules/master/repository/permission"
+	"backend-app/internal/modules/master/repository/registry"
 	"backend-app/internal/modules/master/repository/role"
 	"backend-app/internal/modules/master/repository/user"
+	permission2 "backend-app/internal/modules/master/service/permission"
+	registry2 "backend-app/internal/modules/master/service/registry"
 	role2 "backend-app/internal/modules/master/service/role"
 	user2 "backend-app/internal/modules/master/service/user"
 	"gorm.io/gorm"
@@ -25,6 +29,12 @@ func InitializeMasterRouter(cfg *config.Config, db *gorm.DB) *MasterRouter {
 	roleRepository := role.NewRoleRepository(db)
 	roleService := role2.NewRoleService(roleRepository)
 	roleController := controller.NewRoleController(roleService)
-	masterRouter := NewMasterRouter(userController, roleController)
+	registryRepository := registry.NewRegistryRepository(db)
+	registryService := registry2.NewRegistryService(registryRepository)
+	registryController := controller.NewRegistryController(registryService)
+	permissionRepository := permission.NewPermissionRepository(db)
+	permissionService := permission2.NewPermissionService(permissionRepository)
+	permissionController := controller.NewPermissionController(permissionService)
+	masterRouter := NewMasterRouter(userController, roleController, registryController, permissionController)
 	return masterRouter
 }
