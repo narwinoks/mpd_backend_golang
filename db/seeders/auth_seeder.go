@@ -4,6 +4,7 @@ import (
 	auth "backend-app/internal/modules/auth/models"
 
 	"github.com/brianvoe/gofakeit/v6"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -79,13 +80,14 @@ func SeedAuth(db *gorm.DB, profileID uint32, employees *EmployeeState) error {
 		{employees.BudiID, "dr_budi", roleIDs["Dokter"]},
 	}
 	for _, u := range users {
+		password, _ := HashPassword("password")
 		m := auth.User{
 			BaseModel:  createBaseModel(profileID, &winarnoID),
 			RoleID:     u.RoleID,
 			EmployeeID: &u.EmpID,
 			Username:   u.Username,
 			Email:      gofakeit.Email(),
-			Password:   gofakeit.Password(true, true, true, false, false, 12),
+			Password:   password,
 		}
 		if err := db.Create(&m).Error; err != nil {
 			return err
@@ -110,4 +112,8 @@ func SeedAuth(db *gorm.DB, profileID uint32, employees *EmployeeState) error {
 	})
 
 	return nil
+}
+func HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	return string(bytes), err
 }

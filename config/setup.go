@@ -101,7 +101,7 @@ func SetupLog(cfg *LogConfig) {
 
 	// Setup Lumberjack for log rotation
 	logWriter := &lumberjack.Logger{
-		Filename:   "./storage/mpd.log",
+		Filename:   "./storage/golang.log",
 		MaxSize:    50, // megabytes
 		MaxBackups: 30,
 		MaxAge:     28,   //days

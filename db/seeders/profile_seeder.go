@@ -12,16 +12,11 @@ type ProfileState struct {
 	ProfileID uint32
 }
 
-func SeedProfiles(db *gorm.DB, locations *LocationState) (*ProfileState, error) {
+func SeedProfiles(db *gorm.DB) (*ProfileState, error) {
 	state := &ProfileState{}
 
 	// RS Transmedic Profile
 	rsProfile := profile.Profile{
-		BaseModel:      createBaseModel(1, nil),
-		ProvinceID:     locations.ProvinceIDs["Jawa Barat"],
-		CityID:         locations.CityIDs["Kota Bandung"],
-		SubdistrictID:  locations.SubdistrictIDs["Cicendo"],
-		VillageID:      1, // Assuming first village ID is 1
 		PostalCode:     gofakeit.Zip(),
 		Email:          "info@transmedic.co.id",
 		Name:           "RS Transmedic",

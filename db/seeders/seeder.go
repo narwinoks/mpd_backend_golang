@@ -8,18 +8,20 @@ import (
 
 func SeedAll(db *gorm.DB) error {
 	return db.Transaction(func(tx *gorm.DB) error {
-		// 1. Locations
-		fmt.Println("Seeding Locations...")
-		locations, err := SeedLocations(tx)
-		if err != nil {
-			return fmt.Errorf("failed to seed locations: %w", err)
-		}
-
 		// 2. Profiles
 		fmt.Println("Seeding Profiles...")
-		profiles, err := SeedProfiles(tx, locations)
+		profiles, err := SeedProfiles(tx)
 		if err != nil {
 			return fmt.Errorf("failed to seed profiles: %w", err)
+		}
+		// 1. Locations
+		fmt.Println("Seeding Locations...")
+		_, err = SeedLocations(tx)
+		if err != nil {
+			return err
+		}
+		if err != nil {
+			return fmt.Errorf("failed to seed locations: %w", err)
 		}
 
 		// 3. Masters

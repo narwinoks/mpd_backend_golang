@@ -2,7 +2,7 @@ CREATE TABLE personal_access_tokens_m (
     id SERIAL PRIMARY KEY,
     uuid CHAR(36) NOT NULL,
     is_active BOOLEAN DEFAULT TRUE,
-    profile_id INTEGER,
+    profile_id INTEGER NOT NULL ,
     external_code VARCHAR(20),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
