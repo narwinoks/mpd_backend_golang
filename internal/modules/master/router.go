@@ -2,18 +2,20 @@ package master
 
 import (
 	"backend-app/internal/modules/master/controller"
+	"backend-app/internal/modules/master/controller/employee"
 	"backend-app/internal/modules/master/controller/general"
 
 	"github.com/gin-gonic/gin"
 )
 
 type MasterRouter struct {
-	userController       *controller.UserController
-	roleController       *controller.RoleController
-	registryController   *controller.RegistryController
-	permissionController *controller.PermissionController
-	religionController   *general.ReligionController
-	genderController     *general.GenderController
+	userController        *controller.UserController
+	roleController        *controller.RoleController
+	registryController    *controller.RegistryController
+	permissionController  *controller.PermissionController
+	religionController    *general.ReligionController
+	genderController      *general.GenderController
+	jobCategoryController *employee.JobCategoryController
 }
 
 func NewMasterRouter(
@@ -23,14 +25,16 @@ func NewMasterRouter(
 	permissionController *controller.PermissionController,
 	religionController *general.ReligionController,
 	genderController *general.GenderController,
+	jobCategoryController *employee.JobCategoryController,
 ) *MasterRouter {
 	return &MasterRouter{
-		userController:       userController,
-		roleController:       roleController,
-		registryController:   registryController,
-		permissionController: permissionController,
-		religionController:   religionController,
-		genderController:     genderController,
+		userController:        userController,
+		roleController:        roleController,
+		registryController:    registryController,
+		permissionController:  permissionController,
+		religionController:    religionController,
+		genderController:      genderController,
+		jobCategoryController: jobCategoryController,
 	}
 }
 
@@ -88,6 +92,15 @@ func (r *MasterRouter) RegisterRoutes(rg *gin.RouterGroup) {
 			genders.POST("", r.genderController.Create)
 			genders.PUT("/:id", r.genderController.Update)
 			genders.DELETE("/:id", r.genderController.Delete)
+		}
+
+		jobCategories := master.Group("/employee/job-categories")
+		{
+			jobCategories.GET("", r.jobCategoryController.FindAll)
+			jobCategories.GET("/:id", r.jobCategoryController.FindByID)
+			jobCategories.POST("", r.jobCategoryController.Create)
+			jobCategories.PUT("/:id", r.jobCategoryController.Update)
+			jobCategories.DELETE("/:id", r.jobCategoryController.Delete)
 		}
 	}
 }
