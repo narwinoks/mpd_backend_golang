@@ -49,18 +49,18 @@ func (r *MasterRouter) RegisterRoutes(rg *gin.RouterGroup) {
 		registries := master.Group("/registries")
 		{
 			registries.GET("/menu", r.registryController.GetMenu)
-			registries.GET("/", r.registryController.FindAll)
+			registries.GET("", r.registryController.FindAll)
 			registries.GET("/:id", r.registryController.FindByID)
-			registries.POST("/", r.registryController.Create)
+			registries.POST("", r.registryController.Create)
 			registries.PUT("/:id", r.registryController.Update)
 			registries.DELETE("/:id", r.registryController.Delete)
 		}
 
 		permissions := master.Group("/permissions")
 		{
-			permissions.GET("/", r.permissionController.FindAll)
+			permissions.GET("", r.permissionController.FindAll)
 			permissions.GET("/:id", r.permissionController.FindByID)
-			permissions.POST("/", r.permissionController.Create)
+			permissions.POST("", r.permissionController.Create)
 			permissions.PUT("/:id", r.permissionController.Update)
 			permissions.DELETE("/:id", r.permissionController.Delete)
 		}

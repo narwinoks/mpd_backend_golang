@@ -18,7 +18,11 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 
 func (r *userRepositoryImpl) FindAll(ctx context.Context) ([]models.User, error) {
 	var users []models.User
-	if err := r.db.WithContext(ctx).Find(&users).Error; err != nil {
+	if err := r.db.WithContext(ctx).Preload("Role", func(db *gorm.DB) *gorm.DB {
+		return db.Select("id", "uuid", "role")
+	}).Preload("Employee", func(db *gorm.DB) *gorm.DB {
+		return db.Select("id", "uuid", "full_name")
+	}).Find(&users).Error; err != nil {
 		return nil, err
 	}
 	return users, nil

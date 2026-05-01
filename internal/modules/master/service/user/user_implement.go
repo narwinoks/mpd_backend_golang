@@ -23,7 +23,6 @@ func (s *userServiceImpl) GetAllUsers(ctx context.Context) ([]res.UserResponse, 
 		return nil, err
 	}
 
-	// Requirement: Treat empty array as 404
 	if len(users) == 0 {
 		return nil, exception.NewNotFoundError("Data Not Found")
 	}
