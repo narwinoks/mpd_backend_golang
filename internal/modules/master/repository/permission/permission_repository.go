@@ -59,7 +59,7 @@ func (r *permissionRepositoryImpl) Create(ctx context.Context, p *permission.Per
 }
 
 func (r *permissionRepositoryImpl) Update(ctx context.Context, p *permission.Permission) error {
-	return r.db.WithContext(ctx).Save(p).Error
+	return r.db.WithContext(ctx).Updates(p).Error
 }
 
 func (r *permissionRepositoryImpl) Delete(ctx context.Context, id uint32) error {

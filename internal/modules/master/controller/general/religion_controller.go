@@ -1,41 +1,42 @@
-package controller
+package general
 
 import (
 	"context"
 	"backend-app/internal/core/response"
-	req "backend-app/internal/modules/master/request/role"
-	"backend-app/internal/modules/master/service/role"
+	req "backend-app/internal/modules/master/request/general/religion"
+	"backend-app/internal/modules/master/service/general/religion"
 	"backend-app/pkg/pagination"
 
 	"github.com/gin-gonic/gin"
 )
 
-type RoleController struct {
-	roleService role.RoleService
+type ReligionController struct {
+	religionService religion.ReligionService
 }
 
-func NewRoleController(roleService role.RoleService) *RoleController {
-	return &RoleController{roleService: roleService}
+func NewReligionController(religionService religion.ReligionService) *ReligionController {
+	return &ReligionController{religionService: religionService}
 }
-func (h *RoleController) FindAll(c *gin.Context) {
+
+func (h *ReligionController) FindAll(c *gin.Context) {
 	var paginateReq pagination.BaseRequest
 	if err := c.ShouldBindQuery(&paginateReq); err != nil {
 		c.Error(err)
 		return
 	}
 
-	roles, meta, err := h.roleService.GetAll(c.Request.Context(), paginateReq)
+	religions, meta, err := h.religionService.GetAll(c.Request.Context(), paginateReq)
 	if err != nil {
 		c.Error(err)
 		return
 	}
-	response.SendSuccess(c, response.Success, roles, meta)
+	response.SendSuccess(c, response.Success, religions, meta)
 }
 
-func (h *RoleController) FindByID(c *gin.Context) {
+func (h *ReligionController) FindByID(c *gin.Context) {
 	id := c.Param("id")
 
-	res, err := h.roleService.GetByID(c.Request.Context(), id)
+	res, err := h.religionService.GetByID(c.Request.Context(), id)
 	if err != nil {
 		c.Error(err)
 		return
@@ -43,10 +44,10 @@ func (h *RoleController) FindByID(c *gin.Context) {
 	response.SendSuccess(c, response.Success, res)
 }
 
-func (h *RoleController) Create(c *gin.Context) {
-	var roleReq req.CreateRoleRequest
+func (h *ReligionController) Create(c *gin.Context) {
+	var relReq req.CreateReligionRequest
 
-	if err := c.ShouldBindJSON(&roleReq); err != nil {
+	if err := c.ShouldBindJSON(&relReq); err != nil {
 		c.Error(err)
 		return
 	}
@@ -59,7 +60,7 @@ func (h *RoleController) Create(c *gin.Context) {
 		ctx = context.WithValue(ctx, "user_id", userID)
 	}
 
-	res, err := h.roleService.Create(ctx, roleReq)
+	res, err := h.religionService.Create(ctx, relReq)
 	if err != nil {
 		c.Error(err)
 		return
@@ -67,10 +68,10 @@ func (h *RoleController) Create(c *gin.Context) {
 	response.SendSuccess(c, response.SuccessCreate, res)
 }
 
-func (h *RoleController) Update(c *gin.Context) {
+func (h *ReligionController) Update(c *gin.Context) {
 	id := c.Param("id")
-	var roleReq req.UpdateRoleRequest
-	if err := c.ShouldBindJSON(&roleReq); err != nil {
+	var relReq req.UpdateReligionRequest
+	if err := c.ShouldBindJSON(&relReq); err != nil {
 		c.Error(err)
 		return
 	}
@@ -83,7 +84,7 @@ func (h *RoleController) Update(c *gin.Context) {
 		ctx = context.WithValue(ctx, "user_id", userID)
 	}
 
-	res, err := h.roleService.Update(ctx, id, roleReq)
+	res, err := h.religionService.Update(ctx, id, relReq)
 	if err != nil {
 		c.Error(err)
 		return
@@ -91,10 +92,10 @@ func (h *RoleController) Update(c *gin.Context) {
 	response.SendSuccess(c, response.SuccessUpdate, res)
 }
 
-func (h *RoleController) Delete(c *gin.Context) {
+func (h *ReligionController) Delete(c *gin.Context) {
 	id := c.Param("id")
 
-	err := h.roleService.Delete(c.Request.Context(), id)
+	err := h.religionService.Delete(c.Request.Context(), id)
 	if err != nil {
 		c.Error(err)
 		return

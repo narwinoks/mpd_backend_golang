@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"context"
 	"backend-app/internal/core/response"
 	req "backend-app/internal/modules/master/request/registry"
 	"backend-app/internal/modules/master/service/registry"
@@ -51,7 +52,15 @@ func (h *RegistryController) Create(c *gin.Context) {
 		return
 	}
 
-	res, err := h.service.Create(c.Request.Context(), request)
+	ctx := c.Request.Context()
+	if profileID, exists := c.Get("profile_id"); exists {
+		ctx = context.WithValue(ctx, "profile_id", profileID)
+	}
+	if userID, exists := c.Get("user_id"); exists {
+		ctx = context.WithValue(ctx, "user_id", userID)
+	}
+
+	res, err := h.service.Create(ctx, request)
 	if err != nil {
 		c.Error(err)
 		return
@@ -67,7 +76,15 @@ func (h *RegistryController) Update(c *gin.Context) {
 		return
 	}
 
-	res, err := h.service.Update(c.Request.Context(), id, request)
+	ctx := c.Request.Context()
+	if profileID, exists := c.Get("profile_id"); exists {
+		ctx = context.WithValue(ctx, "profile_id", profileID)
+	}
+	if userID, exists := c.Get("user_id"); exists {
+		ctx = context.WithValue(ctx, "user_id", userID)
+	}
+
+	res, err := h.service.Update(ctx, id, request)
 	if err != nil {
 		c.Error(err)
 		return

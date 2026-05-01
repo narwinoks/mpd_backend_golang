@@ -6,7 +6,7 @@ import (
 )
 
 type UserResponse struct {
-	ID        uint32                  `json:"id"`
+	ID        string                  `json:"id"`
 	Username  string                  `json:"username"`
 	Email     string                  `json:"email"`
 	RoleID    uint32                  `json:"role_id"`
@@ -31,7 +31,7 @@ func FromUser(u *models.User) *UserResponse {
 		return nil
 	}
 	response := &UserResponse{
-		ID:        u.ID,
+		ID:        u.UUID,
 		Username:  u.Username,
 		Email:     u.Email,
 		RoleID:    u.RoleID,

@@ -9,10 +9,13 @@ package master
 import (
 	"backend-app/config"
 	"backend-app/internal/modules/master/controller"
+	"backend-app/internal/modules/master/controller/general"
+	"backend-app/internal/modules/master/repository/general/religion"
 	"backend-app/internal/modules/master/repository/permission"
 	"backend-app/internal/modules/master/repository/registry"
 	"backend-app/internal/modules/master/repository/role"
 	"backend-app/internal/modules/master/repository/user"
+	religion2 "backend-app/internal/modules/master/service/general/religion"
 	permission2 "backend-app/internal/modules/master/service/permission"
 	registry2 "backend-app/internal/modules/master/service/registry"
 	role2 "backend-app/internal/modules/master/service/role"
@@ -35,6 +38,9 @@ func InitializeMasterRouter(cfg *config.Config, db *gorm.DB) *MasterRouter {
 	permissionRepository := permission.NewPermissionRepository(db)
 	permissionService := permission2.NewPermissionService(permissionRepository)
 	permissionController := controller.NewPermissionController(permissionService)
-	masterRouter := NewMasterRouter(userController, roleController, registryController, permissionController)
+	religionRepository := religion.NewReligionRepository(db)
+	religionService := religion2.NewReligionService(religionRepository)
+	religionController := general.NewReligionController(religionService)
+	masterRouter := NewMasterRouter(userController, roleController, registryController, permissionController, religionController)
 	return masterRouter
 }

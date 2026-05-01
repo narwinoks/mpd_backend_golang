@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"context"
 	"backend-app/internal/core/response"
 	req "backend-app/internal/modules/master/request/user"
 	"backend-app/internal/modules/master/service/user"
@@ -57,7 +58,15 @@ func (h *UserController) Create(c *gin.Context) {
 		return
 	}
 
-	res, err := h.userService.CreateUser(c.Request.Context(), &userReq)
+	ctx := c.Request.Context()
+	if profileID, exists := c.Get("profile_id"); exists {
+		ctx = context.WithValue(ctx, "profile_id", profileID)
+	}
+	if userID, exists := c.Get("user_id"); exists {
+		ctx = context.WithValue(ctx, "user_id", userID)
+	}
+
+	res, err := h.userService.CreateUser(ctx, &userReq)
 	if err != nil {
 		c.Error(err)
 		return

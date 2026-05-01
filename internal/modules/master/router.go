@@ -2,6 +2,7 @@ package master
 
 import (
 	"backend-app/internal/modules/master/controller"
+	"backend-app/internal/modules/master/controller/general"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,6 +12,7 @@ type MasterRouter struct {
 	roleController       *controller.RoleController
 	registryController   *controller.RegistryController
 	permissionController *controller.PermissionController
+	religionController   *general.ReligionController
 }
 
 func NewMasterRouter(
@@ -18,12 +20,14 @@ func NewMasterRouter(
 	roleController *controller.RoleController,
 	registryController *controller.RegistryController,
 	permissionController *controller.PermissionController,
+	religionController *general.ReligionController,
 ) *MasterRouter {
 	return &MasterRouter{
 		userController:       userController,
 		roleController:       roleController,
 		registryController:   registryController,
 		permissionController: permissionController,
+		religionController:   religionController,
 	}
 }
 
@@ -63,6 +67,15 @@ func (r *MasterRouter) RegisterRoutes(rg *gin.RouterGroup) {
 			permissions.POST("", r.permissionController.Create)
 			permissions.PUT("/:id", r.permissionController.Update)
 			permissions.DELETE("/:id", r.permissionController.Delete)
+		}
+
+		religions := master.Group("/general/religions")
+		{
+			religions.GET("", r.religionController.FindAll)
+			religions.GET("/:id", r.religionController.FindByID)
+			religions.POST("", r.religionController.Create)
+			religions.PUT("/:id", r.religionController.Update)
+			religions.DELETE("/:id", r.religionController.Delete)
 		}
 	}
 }

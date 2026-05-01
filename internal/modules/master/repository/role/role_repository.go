@@ -59,7 +59,7 @@ func (r *roleRepositoryImpl) Create(ctx context.Context, roleEntity *role.Role) 
 }
 
 func (r *roleRepositoryImpl) Update(ctx context.Context, roleEntity *role.Role) error {
-	return r.db.WithContext(ctx).Save(roleEntity).Error
+	return r.db.WithContext(ctx).Updates(roleEntity).Error
 }
 
 func (r *roleRepositoryImpl) Delete(ctx context.Context, id uint32) error {

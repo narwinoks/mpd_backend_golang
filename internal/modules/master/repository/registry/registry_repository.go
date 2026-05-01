@@ -59,7 +59,7 @@ func (r *registryRepositoryImpl) Create(ctx context.Context, reg *registry.Regis
 }
 
 func (r *registryRepositoryImpl) Update(ctx context.Context, reg *registry.Registry) error {
-	return r.db.WithContext(ctx).Save(reg).Error
+	return r.db.WithContext(ctx).Updates(reg).Error
 }
 
 func (r *registryRepositoryImpl) Delete(ctx context.Context, id uint32) error {
