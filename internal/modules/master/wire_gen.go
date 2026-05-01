@@ -12,6 +12,7 @@ import (
 	"backend-app/internal/modules/master/controller/employee"
 	"backend-app/internal/modules/master/controller/general"
 	"backend-app/internal/modules/master/repository/employee/job_category"
+	"backend-app/internal/modules/master/repository/employee/job_title"
 	"backend-app/internal/modules/master/repository/general/gender"
 	"backend-app/internal/modules/master/repository/general/religion"
 	"backend-app/internal/modules/master/repository/permission"
@@ -19,6 +20,7 @@ import (
 	"backend-app/internal/modules/master/repository/role"
 	"backend-app/internal/modules/master/repository/user"
 	job_category2 "backend-app/internal/modules/master/service/employee/job_category"
+	job_title2 "backend-app/internal/modules/master/service/employee/job_title"
 	gender2 "backend-app/internal/modules/master/service/general/gender"
 	religion2 "backend-app/internal/modules/master/service/general/religion"
 	permission2 "backend-app/internal/modules/master/service/permission"
@@ -52,6 +54,9 @@ func InitializeMasterRouter(cfg *config.Config, db *gorm.DB) *MasterRouter {
 	jobCategoryRepository := job_category.NewJobCategoryRepository(db)
 	jobCategoryService := job_category2.NewJobCategoryService(jobCategoryRepository)
 	jobCategoryController := employee.NewJobCategoryController(jobCategoryService)
-	masterRouter := NewMasterRouter(userController, roleController, registryController, permissionController, religionController, genderController, jobCategoryController)
+	jobTitleRepository := job_title.NewJobTitleRepository(db)
+	jobTitleService := job_title2.NewJobTitleService(jobTitleRepository, jobCategoryRepository)
+	jobTitleController := employee.NewJobTitleController(jobTitleService)
+	masterRouter := NewMasterRouter(userController, roleController, registryController, permissionController, religionController, genderController, jobCategoryController, jobTitleController)
 	return masterRouter
 }

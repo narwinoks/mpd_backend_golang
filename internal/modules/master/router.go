@@ -16,6 +16,7 @@ type MasterRouter struct {
 	religionController    *general.ReligionController
 	genderController      *general.GenderController
 	jobCategoryController *employee.JobCategoryController
+	jobTitleController    *employee.JobTitleController
 }
 
 func NewMasterRouter(
@@ -26,6 +27,7 @@ func NewMasterRouter(
 	religionController *general.ReligionController,
 	genderController *general.GenderController,
 	jobCategoryController *employee.JobCategoryController,
+	jobTitleController *employee.JobTitleController,
 ) *MasterRouter {
 	return &MasterRouter{
 		userController:        userController,
@@ -35,6 +37,7 @@ func NewMasterRouter(
 		religionController:    religionController,
 		genderController:      genderController,
 		jobCategoryController: jobCategoryController,
+		jobTitleController:    jobTitleController,
 	}
 }
 
@@ -101,6 +104,15 @@ func (r *MasterRouter) RegisterRoutes(rg *gin.RouterGroup) {
 			jobCategories.POST("", r.jobCategoryController.Create)
 			jobCategories.PUT("/:id", r.jobCategoryController.Update)
 			jobCategories.DELETE("/:id", r.jobCategoryController.Delete)
+		}
+
+		jobTitles := master.Group("/employee/job-titles")
+		{
+			jobTitles.GET("", r.jobTitleController.FindAll)
+			jobTitles.GET("/:id", r.jobTitleController.FindByID)
+			jobTitles.POST("", r.jobTitleController.Create)
+			jobTitles.PUT("/:id", r.jobTitleController.Update)
+			jobTitles.DELETE("/:id", r.jobTitleController.Delete)
 		}
 	}
 }

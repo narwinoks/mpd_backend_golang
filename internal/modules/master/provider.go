@@ -9,6 +9,7 @@ import (
 	repoRel "backend-app/internal/modules/master/repository/general/religion"
 	repoGender "backend-app/internal/modules/master/repository/general/gender"
 	repoJobCat "backend-app/internal/modules/master/repository/employee/job_category"
+	repoJobTitle "backend-app/internal/modules/master/repository/employee/job_title"
 	svcReg "backend-app/internal/modules/master/service/registry"
 	svcRole "backend-app/internal/modules/master/service/role"
 	svcUser "backend-app/internal/modules/master/service/user"
@@ -16,6 +17,7 @@ import (
 	svcRel "backend-app/internal/modules/master/service/general/religion"
 	svcGender "backend-app/internal/modules/master/service/general/gender"
 	svcJobCat "backend-app/internal/modules/master/service/employee/job_category"
+	svcJobTitle "backend-app/internal/modules/master/service/employee/job_title"
 	ctrlGen "backend-app/internal/modules/master/controller/general"
 	ctrlEmp "backend-app/internal/modules/master/controller/employee"
 
@@ -30,6 +32,7 @@ var MasterProviderSet = wire.NewSet(
 	repoRel.NewReligionRepository,
 	repoGender.NewGenderRepository,
 	repoJobCat.NewJobCategoryRepository,
+	repoJobTitle.NewJobTitleRepository,
 	svcUser.NewUserService,
 	svcRole.NewRoleService,
 	svcReg.NewRegistryService,
@@ -37,6 +40,7 @@ var MasterProviderSet = wire.NewSet(
 	svcRel.NewReligionService,
 	svcGender.NewGenderService,
 	svcJobCat.NewJobCategoryService,
+	svcJobTitle.NewJobTitleService,
 	controller.NewUserController,
 	controller.NewRoleController,
 	controller.NewRegistryController,
@@ -44,5 +48,6 @@ var MasterProviderSet = wire.NewSet(
 	ctrlGen.NewReligionController,
 	ctrlGen.NewGenderController,
 	ctrlEmp.NewJobCategoryController,
+	ctrlEmp.NewJobTitleController,
 	NewMasterRouter,
 )
