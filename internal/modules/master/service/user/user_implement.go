@@ -6,6 +6,7 @@ import (
 	repo "backend-app/internal/modules/master/repository/user"
 	req "backend-app/internal/modules/master/request/user"
 	res "backend-app/internal/modules/master/response/user"
+	"backend-app/pkg/pagination"
 	"context"
 )
 
@@ -17,17 +18,20 @@ func NewUserService(userRepo repo.UserRepository) UserService {
 	return &userServiceImpl{userRepo: userRepo}
 }
 
-func (s *userServiceImpl) GetAllUsers(ctx context.Context) ([]res.UserResponse, error) {
-	users, err := s.userRepo.FindAll(ctx)
+func (s *userServiceImpl) GetAllUsers(ctx context.Context, request pagination.BaseRequest) ([]res.UserResponse, *pagination.Meta, error) {
+	users, total, err := s.userRepo.FindAll(ctx, request)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	if len(users) == 0 {
-		return nil, exception.NewNotFoundError("Data Not Found")
+		return nil, nil, exception.NewNotFoundError("Data Not Found")
 	}
 
-	return res.FromUsers(users), nil
+	response := res.FromUsers(users)
+	meta := pagination.BuildMeta(total, request.Page, request.Paginate, len(response))
+
+	return response, meta, nil
 }
 
 func (s *userServiceImpl) GetUserByID(ctx context.Context, id uint) (*res.UserResponse, error) {

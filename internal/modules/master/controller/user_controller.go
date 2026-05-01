@@ -4,6 +4,7 @@ import (
 	"backend-app/internal/core/response"
 	req "backend-app/internal/modules/master/request/user"
 	"backend-app/internal/modules/master/service/user"
+	"backend-app/pkg/pagination"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -18,12 +19,18 @@ func NewUserController(userService user.UserService) *UserController {
 }
 
 func (h *UserController) FindAll(c *gin.Context) {
-	users, err := h.userService.GetAllUsers(c.Request.Context())
+	var request pagination.BaseRequest
+	if err := c.ShouldBindQuery(&request); err != nil {
+		c.Error(err)
+		return
+	}
+
+	users, meta, err := h.userService.GetAllUsers(c.Request.Context(), request)
 	if err != nil {
 		c.Error(err)
 		return
 	}
-	response.SendSuccess(c, response.Success, users)
+	response.SendSuccess(c, response.Success, users, meta)
 }
 
 func (h *UserController) FindByID(c *gin.Context) {

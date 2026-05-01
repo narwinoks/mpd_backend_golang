@@ -32,16 +32,16 @@ func (r *MasterRouter) RegisterRoutes(rg *gin.RouterGroup) {
 	{
 		users := master.Group("/users")
 		{
-			users.GET("/", r.userController.FindAll)
+			users.GET("", r.userController.FindAll)
 			users.GET("/:id", r.userController.FindByID)
-			users.POST("/", r.userController.Create)
+			users.POST("", r.userController.Create)
 		}
 
 		roles := master.Group("/roles")
 		{
-			roles.GET("/", r.roleController.FindAll)
+			roles.GET("", r.roleController.FindAll)
 			roles.GET("/:id", r.roleController.FindByID)
-			roles.POST("/", r.roleController.Create)
+			roles.POST("", r.roleController.Create)
 			roles.PUT("/:id", r.roleController.Update)
 			roles.DELETE("/:id", r.roleController.Delete)
 		}
