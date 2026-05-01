@@ -13,6 +13,7 @@ type MasterRouter struct {
 	registryController   *controller.RegistryController
 	permissionController *controller.PermissionController
 	religionController   *general.ReligionController
+	genderController     *general.GenderController
 }
 
 func NewMasterRouter(
@@ -21,6 +22,7 @@ func NewMasterRouter(
 	registryController *controller.RegistryController,
 	permissionController *controller.PermissionController,
 	religionController *general.ReligionController,
+	genderController *general.GenderController,
 ) *MasterRouter {
 	return &MasterRouter{
 		userController:       userController,
@@ -28,6 +30,7 @@ func NewMasterRouter(
 		registryController:   registryController,
 		permissionController: permissionController,
 		religionController:   religionController,
+		genderController:     genderController,
 	}
 }
 
@@ -76,6 +79,15 @@ func (r *MasterRouter) RegisterRoutes(rg *gin.RouterGroup) {
 			religions.POST("", r.religionController.Create)
 			religions.PUT("/:id", r.religionController.Update)
 			religions.DELETE("/:id", r.religionController.Delete)
+		}
+
+		genders := master.Group("/general/genders")
+		{
+			genders.GET("", r.genderController.FindAll)
+			genders.GET("/:id", r.genderController.FindByID)
+			genders.POST("", r.genderController.Create)
+			genders.PUT("/:id", r.genderController.Update)
+			genders.DELETE("/:id", r.genderController.Delete)
 		}
 	}
 }

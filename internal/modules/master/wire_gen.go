@@ -10,11 +10,13 @@ import (
 	"backend-app/config"
 	"backend-app/internal/modules/master/controller"
 	"backend-app/internal/modules/master/controller/general"
+	"backend-app/internal/modules/master/repository/general/gender"
 	"backend-app/internal/modules/master/repository/general/religion"
 	"backend-app/internal/modules/master/repository/permission"
 	"backend-app/internal/modules/master/repository/registry"
 	"backend-app/internal/modules/master/repository/role"
 	"backend-app/internal/modules/master/repository/user"
+	gender2 "backend-app/internal/modules/master/service/general/gender"
 	religion2 "backend-app/internal/modules/master/service/general/religion"
 	permission2 "backend-app/internal/modules/master/service/permission"
 	registry2 "backend-app/internal/modules/master/service/registry"
@@ -41,6 +43,9 @@ func InitializeMasterRouter(cfg *config.Config, db *gorm.DB) *MasterRouter {
 	religionRepository := religion.NewReligionRepository(db)
 	religionService := religion2.NewReligionService(religionRepository)
 	religionController := general.NewReligionController(religionService)
-	masterRouter := NewMasterRouter(userController, roleController, registryController, permissionController, religionController)
+	genderRepository := gender.NewGenderRepository(db)
+	genderService := gender2.NewGenderService(genderRepository)
+	genderController := general.NewGenderController(genderService)
+	masterRouter := NewMasterRouter(userController, roleController, registryController, permissionController, religionController, genderController)
 	return masterRouter
 }

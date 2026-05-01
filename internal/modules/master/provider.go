@@ -7,11 +7,13 @@ import (
 	repoUser "backend-app/internal/modules/master/repository/user"
 	repoPerm "backend-app/internal/modules/master/repository/permission"
 	repoRel "backend-app/internal/modules/master/repository/general/religion"
+	repoGender "backend-app/internal/modules/master/repository/general/gender"
 	svcReg "backend-app/internal/modules/master/service/registry"
 	svcRole "backend-app/internal/modules/master/service/role"
 	svcUser "backend-app/internal/modules/master/service/user"
 	svcPerm "backend-app/internal/modules/master/service/permission"
 	svcRel "backend-app/internal/modules/master/service/general/religion"
+	svcGender "backend-app/internal/modules/master/service/general/gender"
 	ctrlGen "backend-app/internal/modules/master/controller/general"
 
 	"github.com/google/wire"
@@ -23,15 +25,18 @@ var MasterProviderSet = wire.NewSet(
 	repoReg.NewRegistryRepository,
 	repoPerm.NewPermissionRepository,
 	repoRel.NewReligionRepository,
+	repoGender.NewGenderRepository,
 	svcUser.NewUserService,
 	svcRole.NewRoleService,
 	svcReg.NewRegistryService,
 	svcPerm.NewPermissionService,
 	svcRel.NewReligionService,
+	svcGender.NewGenderService,
 	controller.NewUserController,
 	controller.NewRoleController,
 	controller.NewRegistryController,
 	controller.NewPermissionController,
 	ctrlGen.NewReligionController,
+	ctrlGen.NewGenderController,
 	NewMasterRouter,
 )

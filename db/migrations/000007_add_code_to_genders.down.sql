@@ -1,0 +1,1 @@
+ALTER TABLE genders_m DROP COLUMN IF EXISTS code;

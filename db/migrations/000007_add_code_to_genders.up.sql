@@ -1,0 +1,1 @@
+ALTER TABLE genders_m ADD COLUMN code VARCHAR(4);
