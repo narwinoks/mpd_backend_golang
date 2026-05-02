@@ -6,11 +6,11 @@ app:
   external_code: "MPD HIS"
 
 database:
-  host: "localhost"
-  port: 5432
-  user: "postgres"
-  password: "root"
-  name: "his_database"
+  host: ""
+  port:
+  user: ""
+  password: ""
+  name: ""
   sslmode: "disable"
 
 database_test:

@@ -3,7 +3,6 @@ package seeders
 import (
 	auth "backend-app/internal/modules/auth/models"
 	"fmt"
-	"strings"
 
 	"gorm.io/gorm"
 )
@@ -85,14 +84,10 @@ func SeedMenus(db *gorm.DB, profileID uint32, employees *EmployeeState) error {
 
 	// 3. Eksekusi Looping Data Menu
 	for i, menu := range rawMenus {
-		// Generate Code yang bersih, misal: "MENU_PENDAFTARAN"
-		parentCode := fmt.Sprintf("MENU_%s", strings.ToUpper(strings.ReplaceAll(menu.Title, " ", "_")))
-
 		// A. Insert Parent Menu
 		parentMenu := auth.AppMenu{
 			BaseModel:   createBaseModel(profileID, &winarnoID),
 			AppModuleID: mainModule.ID,
-			Code:        parentCode,
 			Name:        menu.Title,
 			Path:        menu.Href,
 			Icon:        menu.Icon,
@@ -105,13 +100,11 @@ func SeedMenus(db *gorm.DB, profileID uint32, employees *EmployeeState) error {
 
 		// B. Insert Child Menus (SubItems)
 		for j, sub := range menu.SubItems {
-			childCode := fmt.Sprintf("%s_%s", parentCode, strings.ToUpper(strings.ReplaceAll(sub.Title, " ", "_")))
 
 			childMenu := auth.AppMenu{
 				BaseModel:   createBaseModel(profileID, &winarnoID),
 				AppModuleID: mainModule.ID,
 				ParentID:    &parentMenu.ID,
-				Code:        childCode,
 				Name:        sub.Title,
 				Path:        sub.Href,
 				SortOrder:   int(uint32(j + 1)),

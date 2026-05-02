@@ -50,6 +50,12 @@ func SeedAll(db *gorm.DB) error {
 			return fmt.Errorf("failed to seed menu: %w", err)
 		}
 
+		fmt.Println("List Master Registries...")
+		err = SeedRegistries(tx)
+		if err != nil {
+			return fmt.Errorf("failed List Master Registries: %w", err)
+		}
+
 		return nil
 	})
 }
