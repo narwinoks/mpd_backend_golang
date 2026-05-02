@@ -9,26 +9,36 @@ package master
 import (
 	"backend-app/config"
 	"backend-app/internal/modules/master/controller"
+	ctrlDept "backend-app/internal/modules/master/controller/department"
 	"backend-app/internal/modules/master/controller/employee"
 	"backend-app/internal/modules/master/controller/general"
-	"backend-app/internal/modules/master/repository/employee/employment_status"
+	repoBed "backend-app/internal/modules/master/repository/department/bed"
+	repoDept "backend-app/internal/modules/master/repository/department/department"
+	repoRoom "backend-app/internal/modules/master/repository/department/room"
+	repoWard "backend-app/internal/modules/master/repository/department/ward"
+	empStatusRepo "backend-app/internal/modules/master/repository/employee/employment_status"
 	"backend-app/internal/modules/master/repository/employee/job_category"
-	"backend-app/internal/modules/master/repository/employee/job_title"
+	jobTitleRepo "backend-app/internal/modules/master/repository/employee/job_title"
 	"backend-app/internal/modules/master/repository/general/gender"
 	"backend-app/internal/modules/master/repository/general/religion"
 	"backend-app/internal/modules/master/repository/permission"
 	"backend-app/internal/modules/master/repository/registry"
 	"backend-app/internal/modules/master/repository/role"
 	"backend-app/internal/modules/master/repository/user"
-	employment_status2 "backend-app/internal/modules/master/service/employee/employment_status"
+	svcBed "backend-app/internal/modules/master/service/department/bed"
+	svcDept "backend-app/internal/modules/master/service/department/department"
+	svcRoom "backend-app/internal/modules/master/service/department/room"
+	svcWard "backend-app/internal/modules/master/service/department/ward"
+	empStatusSvc "backend-app/internal/modules/master/service/employee/employment_status"
 	job_category2 "backend-app/internal/modules/master/service/employee/job_category"
-	job_title2 "backend-app/internal/modules/master/service/employee/job_title"
+	jobTitleSvc "backend-app/internal/modules/master/service/employee/job_title"
 	gender2 "backend-app/internal/modules/master/service/general/gender"
 	religion2 "backend-app/internal/modules/master/service/general/religion"
 	permission2 "backend-app/internal/modules/master/service/permission"
 	registry2 "backend-app/internal/modules/master/service/registry"
 	role2 "backend-app/internal/modules/master/service/role"
 	user2 "backend-app/internal/modules/master/service/user"
+
 	"gorm.io/gorm"
 )
 
@@ -56,12 +66,24 @@ func InitializeMasterRouter(cfg *config.Config, db *gorm.DB) *MasterRouter {
 	jobCategoryRepository := job_category.NewJobCategoryRepository(db)
 	jobCategoryService := job_category2.NewJobCategoryService(jobCategoryRepository)
 	jobCategoryController := employee.NewJobCategoryController(jobCategoryService)
-	jobTitleRepository := job_title.NewJobTitleRepository(db)
-	jobTitleService := job_title2.NewJobTitleService(jobTitleRepository, jobCategoryRepository)
+	jobTitleRepository := jobTitleRepo.NewJobTitleRepository(db)
+	jobTitleService := jobTitleSvc.NewJobTitleService(jobTitleRepository, jobCategoryRepository)
 	jobTitleController := employee.NewJobTitleController(jobTitleService)
-	employmentStatusRepository := employment_status.NewEmploymentStatusRepository(db)
-	employmentStatusService := employment_status2.NewEmploymentStatusService(employmentStatusRepository)
+	employmentStatusRepository := empStatusRepo.NewEmploymentStatusRepository(db)
+	employmentStatusService := empStatusSvc.NewEmploymentStatusService(employmentStatusRepository)
 	employmentStatusController := employee.NewEmploymentStatusController(employmentStatusService)
-	masterRouter := NewMasterRouter(userController, roleController, registryController, permissionController, religionController, genderController, jobCategoryController, jobTitleController, employmentStatusController)
+	departmentRepository := repoDept.NewDepartmentRepository(db)
+	departmentService := svcDept.NewDepartmentService(departmentRepository)
+	departmentController := ctrlDept.NewDepartmentController(departmentService)
+	wardRepository := repoWard.NewWardRepository(db)
+	wardService := svcWard.NewWardService(wardRepository)
+	wardController := ctrlDept.NewWardController(wardService)
+	roomRepository := repoRoom.NewRoomRepository(db)
+	roomService := svcRoom.NewRoomService(roomRepository)
+	roomController := ctrlDept.NewRoomController(roomService)
+	bedRepository := repoBed.NewBedRepository(db)
+	bedService := svcBed.NewBedService(bedRepository)
+	bedController := ctrlDept.NewBedController(bedService)
+	masterRouter := NewMasterRouter(userController, roleController, registryController, permissionController, religionController, genderController, jobCategoryController, jobTitleController, employmentStatusController, departmentController, wardController, roomController, bedController)
 	return masterRouter
 }

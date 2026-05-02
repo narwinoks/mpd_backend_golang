@@ -2,8 +2,13 @@ package master
 
 import (
 	"backend-app/internal/modules/master/controller"
+	ctrlDept "backend-app/internal/modules/master/controller/department"
 	ctrlEmp "backend-app/internal/modules/master/controller/employee"
 	ctrlGen "backend-app/internal/modules/master/controller/general"
+	repoBed "backend-app/internal/modules/master/repository/department/bed"
+	repoDept "backend-app/internal/modules/master/repository/department/department"
+	repoRoom "backend-app/internal/modules/master/repository/department/room"
+	repoWard "backend-app/internal/modules/master/repository/department/ward"
 	repoEmpStatus "backend-app/internal/modules/master/repository/employee/employment_status"
 	repoJobCat "backend-app/internal/modules/master/repository/employee/job_category"
 	repoJobTitle "backend-app/internal/modules/master/repository/employee/job_title"
@@ -13,6 +18,10 @@ import (
 	repoReg "backend-app/internal/modules/master/repository/registry"
 	repoRole "backend-app/internal/modules/master/repository/role"
 	repoUser "backend-app/internal/modules/master/repository/user"
+	svcBed "backend-app/internal/modules/master/service/department/bed"
+	svcDept "backend-app/internal/modules/master/service/department/department"
+	svcRoom "backend-app/internal/modules/master/service/department/room"
+	svcWard "backend-app/internal/modules/master/service/department/ward"
 	svcEmpStatus "backend-app/internal/modules/master/service/employee/employment_status"
 	svcJobCat "backend-app/internal/modules/master/service/employee/job_category"
 	svcJobTitle "backend-app/internal/modules/master/service/employee/job_title"
@@ -36,6 +45,10 @@ var MasterProviderSet = wire.NewSet(
 	repoJobCat.NewJobCategoryRepository,
 	repoJobTitle.NewJobTitleRepository,
 	repoEmpStatus.NewEmploymentStatusRepository,
+	repoDept.NewDepartmentRepository,
+	repoWard.NewWardRepository,
+	repoRoom.NewRoomRepository,
+	repoBed.NewBedRepository,
 	svcUser.NewUserService,
 	svcRole.NewRoleService,
 	svcReg.NewRegistryService,
@@ -45,6 +58,10 @@ var MasterProviderSet = wire.NewSet(
 	svcJobCat.NewJobCategoryService,
 	svcJobTitle.NewJobTitleService,
 	svcEmpStatus.NewEmploymentStatusService,
+	svcDept.NewDepartmentService,
+	svcWard.NewWardService,
+	svcRoom.NewRoomService,
+	svcBed.NewBedService,
 	controller.NewUserController,
 	controller.NewRoleController,
 	controller.NewRegistryController,
@@ -54,5 +71,9 @@ var MasterProviderSet = wire.NewSet(
 	ctrlEmp.NewJobCategoryController,
 	ctrlEmp.NewJobTitleController,
 	ctrlEmp.NewEmploymentStatusController,
+	ctrlDept.NewDepartmentController,
+	ctrlDept.NewWardController,
+	ctrlDept.NewRoomController,
+	ctrlDept.NewBedController,
 	NewMasterRouter,
 )

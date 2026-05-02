@@ -1,0 +1,4 @@
+DROP TABLE IF EXISTS beds_m;
+DROP TABLE IF EXISTS rooms_m;
+DROP TABLE IF EXISTS wards_m;
+DROP TABLE IF EXISTS departments_m;

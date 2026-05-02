@@ -56,6 +56,12 @@ func SeedAll(db *gorm.DB) error {
 			return fmt.Errorf("failed List Master Registries: %w", err)
 		}
 
+		// 6. Department & Wards
+		fmt.Println("Seeding Department & Wards...")
+		if err := SeedDepartmentWards(tx, profiles.ProfileID); err != nil {
+			return fmt.Errorf("failed to seed department wards: %w", err)
+		}
+
 		return nil
 	})
 }

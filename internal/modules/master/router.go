@@ -2,6 +2,7 @@ package master
 
 import (
 	"backend-app/internal/modules/master/controller"
+	"backend-app/internal/modules/master/controller/department"
 	"backend-app/internal/modules/master/controller/employee"
 	"backend-app/internal/modules/master/controller/general"
 
@@ -18,6 +19,10 @@ type MasterRouter struct {
 	jobCategoryController      *employee.JobCategoryController
 	jobTitleController         *employee.JobTitleController
 	employmentStatusController *employee.EmploymentStatusController
+	departmentController       *department.DepartmentController
+	wardController             *department.WardController
+	roomController             *department.RoomController
+	bedController              *department.BedController
 }
 
 func NewMasterRouter(
@@ -30,6 +35,10 @@ func NewMasterRouter(
 	jobCategoryController *employee.JobCategoryController,
 	jobTitleController *employee.JobTitleController,
 	employmentStatusController *employee.EmploymentStatusController,
+	departmentController *department.DepartmentController,
+	wardController *department.WardController,
+	roomController *department.RoomController,
+	bedController *department.BedController,
 ) *MasterRouter {
 	return &MasterRouter{
 		userController:             userController,
@@ -41,6 +50,10 @@ func NewMasterRouter(
 		jobCategoryController:      jobCategoryController,
 		jobTitleController:         jobTitleController,
 		employmentStatusController: employmentStatusController,
+		departmentController:       departmentController,
+		wardController:             wardController,
+		roomController:             roomController,
+		bedController:              bedController,
 	}
 }
 
@@ -125,6 +138,42 @@ func (r *MasterRouter) RegisterRoutes(rg *gin.RouterGroup) {
 			employmentStatuses.POST("", r.employmentStatusController.Create)
 			employmentStatuses.PUT("/:id", r.employmentStatusController.Update)
 			employmentStatuses.DELETE("/:id", r.employmentStatusController.Delete)
+		}
+
+		departments := master.Group("/department/departments")
+		{
+			departments.GET("", r.departmentController.FindAll)
+			departments.GET("/:id", r.departmentController.FindByID)
+			departments.POST("", r.departmentController.Create)
+			departments.PUT("/:id", r.departmentController.Update)
+			departments.DELETE("/:id", r.departmentController.Delete)
+		}
+
+		wards := master.Group("/department/wards")
+		{
+			wards.GET("", r.wardController.FindAll)
+			wards.GET("/:id", r.wardController.FindByID)
+			wards.POST("", r.wardController.Create)
+			wards.PUT("/:id", r.wardController.Update)
+			wards.DELETE("/:id", r.wardController.Delete)
+		}
+
+		rooms := master.Group("/department/rooms")
+		{
+			rooms.GET("", r.roomController.FindAll)
+			rooms.GET("/:id", r.roomController.FindByID)
+			rooms.POST("", r.roomController.Create)
+			rooms.PUT("/:id", r.roomController.Update)
+			rooms.DELETE("/:id", r.roomController.Delete)
+		}
+
+		beds := master.Group("/department/beds")
+		{
+			beds.GET("", r.bedController.FindAll)
+			beds.GET("/:id", r.bedController.FindByID)
+			beds.POST("", r.bedController.Create)
+			beds.PUT("/:id", r.bedController.Update)
+			beds.DELETE("/:id", r.bedController.Delete)
 		}
 	}
 }
