@@ -8,6 +8,7 @@ import (
 	"backend-app/internal/core/response"
 	"backend-app/internal/modules/auth"
 	"backend-app/internal/modules/master"
+	"backend-app/pkg/validations"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
@@ -72,7 +73,8 @@ func main() {
 	{
 		masterRouter.RegisterRoutes(protectedGroup)
 	}
-
+	//custom validation handler
+	validations.InitGinValidator(db)
 	// Start Server
 	logrus.Infof("Starting %s on port %d...", cfg.App.Name, cfg.App.Port)
 	if err := r.Run(fmt.Sprintf(":%d", cfg.App.Port)); err != nil {

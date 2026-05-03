@@ -44,7 +44,7 @@ Constructor: Always provide NewEntityRepository(db *gorm.DB) EntityRepository.
 Base Model: Always embed models.BaseModel.
 
 Does'nt :
-select all make with select field
+ **select all make with select field 
 
 4. EXAMPLE WORKFLOW
    If I say: "buat api create order di order_controller"

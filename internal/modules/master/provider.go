@@ -12,7 +12,12 @@ import (
 	repoEmpStatus "backend-app/internal/modules/master/repository/employee/employment_status"
 	repoJobCat "backend-app/internal/modules/master/repository/employee/job_category"
 	repoJobTitle "backend-app/internal/modules/master/repository/employee/job_title"
+	repoPosition "backend-app/internal/modules/master/repository/employee/position"
+	repoEmployee "backend-app/internal/modules/master/repository/employee"
+	repoBank "backend-app/internal/modules/master/repository/general/bank"
+	repoEducation "backend-app/internal/modules/master/repository/general/education"
 	repoGender "backend-app/internal/modules/master/repository/general/gender"
+	repoMaritalStatus "backend-app/internal/modules/master/repository/general/marital_status"
 	repoRel "backend-app/internal/modules/master/repository/general/religion"
 	repoPerm "backend-app/internal/modules/master/repository/permission"
 	repoReg "backend-app/internal/modules/master/repository/registry"
@@ -25,7 +30,12 @@ import (
 	svcEmpStatus "backend-app/internal/modules/master/service/employee/employment_status"
 	svcJobCat "backend-app/internal/modules/master/service/employee/job_category"
 	svcJobTitle "backend-app/internal/modules/master/service/employee/job_title"
+	svcPosition "backend-app/internal/modules/master/service/employee/position"
+	svcEmployee "backend-app/internal/modules/master/service/employee"
+	svcBank "backend-app/internal/modules/master/service/general/bank"
+	svcEducation "backend-app/internal/modules/master/service/general/education"
 	svcGender "backend-app/internal/modules/master/service/general/gender"
+	svcMaritalStatus "backend-app/internal/modules/master/service/general/marital_status"
 	svcRel "backend-app/internal/modules/master/service/general/religion"
 	svcPerm "backend-app/internal/modules/master/service/permission"
 	svcReg "backend-app/internal/modules/master/service/registry"
@@ -42,8 +52,13 @@ var MasterProviderSet = wire.NewSet(
 	repoPerm.NewPermissionRepository,
 	repoRel.NewReligionRepository,
 	repoGender.NewGenderRepository,
+	repoEducation.NewEducationRepository,
+	repoBank.NewBankRepository,
+	repoMaritalStatus.NewMaritalStatusRepository,
 	repoJobCat.NewJobCategoryRepository,
 	repoJobTitle.NewJobTitleRepository,
+	repoPosition.NewPositionRepository,
+	repoEmployee.NewEmployeeRepository,
 	repoEmpStatus.NewEmploymentStatusRepository,
 	repoDept.NewDepartmentRepository,
 	repoWard.NewWardRepository,
@@ -55,8 +70,13 @@ var MasterProviderSet = wire.NewSet(
 	svcPerm.NewPermissionService,
 	svcRel.NewReligionService,
 	svcGender.NewGenderService,
+	svcEducation.NewEducationService,
+	svcBank.NewBankService,
+	svcMaritalStatus.NewMaritalStatusService,
 	svcJobCat.NewJobCategoryService,
 	svcJobTitle.NewJobTitleService,
+	svcPosition.NewPositionService,
+	svcEmployee.NewEmployeeService,
 	svcEmpStatus.NewEmploymentStatusService,
 	svcDept.NewDepartmentService,
 	svcWard.NewWardService,
@@ -68,8 +88,13 @@ var MasterProviderSet = wire.NewSet(
 	controller.NewPermissionController,
 	ctrlGen.NewReligionController,
 	ctrlGen.NewGenderController,
+	ctrlGen.NewEducationController,
+	ctrlGen.NewBankController,
+	ctrlGen.NewMaritalStatusController,
 	ctrlEmp.NewJobCategoryController,
 	ctrlEmp.NewJobTitleController,
+	ctrlEmp.NewPositionController,
+	ctrlEmp.NewEmployeeController,
 	ctrlEmp.NewEmploymentStatusController,
 	ctrlDept.NewDepartmentController,
 	ctrlDept.NewWardController,

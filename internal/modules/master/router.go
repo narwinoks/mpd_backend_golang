@@ -16,8 +16,13 @@ type MasterRouter struct {
 	permissionController       *controller.PermissionController
 	religionController         *general.ReligionController
 	genderController           *general.GenderController
+	educationController        *general.EducationController
+	bankController             *general.BankController
+	maritalStatusController    *general.MaritalStatusController
+	employeeController         *employee.EmployeeController
 	jobCategoryController      *employee.JobCategoryController
 	jobTitleController         *employee.JobTitleController
+	positionController         *employee.PositionController
 	employmentStatusController *employee.EmploymentStatusController
 	departmentController       *department.DepartmentController
 	wardController             *department.WardController
@@ -32,8 +37,13 @@ func NewMasterRouter(
 	permissionController *controller.PermissionController,
 	religionController *general.ReligionController,
 	genderController *general.GenderController,
+	educationController *general.EducationController,
+	bankController *general.BankController,
+	maritalStatusController *general.MaritalStatusController,
+	employeeController *employee.EmployeeController,
 	jobCategoryController *employee.JobCategoryController,
 	jobTitleController *employee.JobTitleController,
+	positionController *employee.PositionController,
 	employmentStatusController *employee.EmploymentStatusController,
 	departmentController *department.DepartmentController,
 	wardController *department.WardController,
@@ -47,8 +57,13 @@ func NewMasterRouter(
 		permissionController:       permissionController,
 		religionController:         religionController,
 		genderController:           genderController,
+		educationController:        educationController,
+		bankController:             bankController,
+		maritalStatusController:    maritalStatusController,
+		employeeController:         employeeController,
 		jobCategoryController:      jobCategoryController,
 		jobTitleController:         jobTitleController,
+		positionController:         positionController,
 		employmentStatusController: employmentStatusController,
 		departmentController:       departmentController,
 		wardController:             wardController,
@@ -113,6 +128,42 @@ func (r *MasterRouter) RegisterRoutes(rg *gin.RouterGroup) {
 			genders.DELETE("/:id", r.genderController.Delete)
 		}
 
+		educations := master.Group("/general/educations")
+		{
+			educations.GET("", r.educationController.FindAll)
+			educations.GET("/:id", r.educationController.FindByID)
+			educations.POST("", r.educationController.Create)
+			educations.PUT("/:id", r.educationController.Update)
+			educations.DELETE("/:id", r.educationController.Delete)
+		}
+
+		banks := master.Group("/general/bank")
+		{
+			banks.GET("", r.bankController.FindAll)
+			banks.GET("/:id", r.bankController.FindByID)
+			banks.POST("", r.bankController.Create)
+			banks.PUT("/:id", r.bankController.Update)
+			banks.DELETE("/:id", r.bankController.Delete)
+		}
+
+		employees := master.Group("/employee")
+		{
+			employees.GET("", r.employeeController.FindAll)
+			employees.GET("/:id", r.employeeController.FindByID)
+			employees.POST("", r.employeeController.Create)
+			employees.PUT("/:id", r.employeeController.Update)
+			employees.DELETE("/:id", r.employeeController.Delete)
+		}
+
+		maritalStatuses := master.Group("/general/marital-status")
+		{
+			maritalStatuses.GET("", r.maritalStatusController.FindAll)
+			maritalStatuses.GET("/:id", r.maritalStatusController.FindByID)
+			maritalStatuses.POST("", r.maritalStatusController.Create)
+			maritalStatuses.PUT("/:id", r.maritalStatusController.Update)
+			maritalStatuses.DELETE("/:id", r.maritalStatusController.Delete)
+		}
+
 		jobCategories := master.Group("/employee/job-categories")
 		{
 			jobCategories.GET("", r.jobCategoryController.FindAll)
@@ -129,6 +180,15 @@ func (r *MasterRouter) RegisterRoutes(rg *gin.RouterGroup) {
 			jobTitles.POST("", r.jobTitleController.Create)
 			jobTitles.PUT("/:id", r.jobTitleController.Update)
 			jobTitles.DELETE("/:id", r.jobTitleController.Delete)
+		}
+
+		positions := master.Group("/employee/positions")
+		{
+			positions.GET("", r.positionController.FindAll)
+			positions.GET("/:id", r.positionController.FindByID)
+			positions.POST("", r.positionController.Create)
+			positions.PUT("/:id", r.positionController.Update)
+			positions.DELETE("/:id", r.positionController.Delete)
 		}
 
 		employmentStatuses := master.Group("/employee/employment-statuses")

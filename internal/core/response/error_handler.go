@@ -114,6 +114,11 @@ func msgForTag(fe validator.FieldError) string {
 		return fmt.Sprintf("Maximum length is %s", fe.Param())
 	case "oneof":
 		return fmt.Sprintf("Must be one of: %s", fe.Param())
+	case "is_npwp":
+		return "Invalid NPWP format (must be exactly 15 digits)"
+	case "unique":
+		return "This value already exists and must be unique"
 	}
+
 	return fe.Error()
 }
