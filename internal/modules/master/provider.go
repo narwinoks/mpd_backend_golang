@@ -5,6 +5,7 @@ import (
 	ctrlDept "backend-app/internal/modules/master/controller/department"
 	ctrlEmp "backend-app/internal/modules/master/controller/employee"
 	ctrlGen "backend-app/internal/modules/master/controller/general"
+	ctrlLoc "backend-app/internal/modules/master/controller/location"
 	repoBed "backend-app/internal/modules/master/repository/department/bed"
 	repoDept "backend-app/internal/modules/master/repository/department/department"
 	repoRoom "backend-app/internal/modules/master/repository/department/room"
@@ -23,6 +24,7 @@ import (
 	repoReg "backend-app/internal/modules/master/repository/registry"
 	repoRole "backend-app/internal/modules/master/repository/role"
 	repoUser "backend-app/internal/modules/master/repository/user"
+	repoProvince "backend-app/internal/modules/master/repository/location/province"
 	svcBed "backend-app/internal/modules/master/service/department/bed"
 	svcDept "backend-app/internal/modules/master/service/department/department"
 	svcRoom "backend-app/internal/modules/master/service/department/room"
@@ -41,6 +43,7 @@ import (
 	svcReg "backend-app/internal/modules/master/service/registry"
 	svcRole "backend-app/internal/modules/master/service/role"
 	svcUser "backend-app/internal/modules/master/service/user"
+	svcProvince "backend-app/internal/modules/master/service/location/province"
 
 	"github.com/google/wire"
 )
@@ -64,6 +67,7 @@ var MasterProviderSet = wire.NewSet(
 	repoWard.NewWardRepository,
 	repoRoom.NewRoomRepository,
 	repoBed.NewBedRepository,
+	repoProvince.NewProvinceRepository,
 	svcUser.NewUserService,
 	svcRole.NewRoleService,
 	svcReg.NewRegistryService,
@@ -82,6 +86,7 @@ var MasterProviderSet = wire.NewSet(
 	svcWard.NewWardService,
 	svcRoom.NewRoomService,
 	svcBed.NewBedService,
+	svcProvince.NewProvinceService,
 	controller.NewUserController,
 	controller.NewRoleController,
 	controller.NewRegistryController,
@@ -100,5 +105,6 @@ var MasterProviderSet = wire.NewSet(
 	ctrlDept.NewWardController,
 	ctrlDept.NewRoomController,
 	ctrlDept.NewBedController,
+	ctrlLoc.NewProvinceController,
 	NewMasterRouter,
 )

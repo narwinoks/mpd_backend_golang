@@ -12,6 +12,7 @@ import (
 	department3 "backend-app/internal/modules/master/controller/department"
 	employee3 "backend-app/internal/modules/master/controller/employee"
 	"backend-app/internal/modules/master/controller/general"
+	"backend-app/internal/modules/master/controller/location"
 	"backend-app/internal/modules/master/repository/department/bed"
 	"backend-app/internal/modules/master/repository/department/department"
 	"backend-app/internal/modules/master/repository/department/room"
@@ -26,6 +27,7 @@ import (
 	"backend-app/internal/modules/master/repository/general/gender"
 	"backend-app/internal/modules/master/repository/general/marital_status"
 	"backend-app/internal/modules/master/repository/general/religion"
+	"backend-app/internal/modules/master/repository/location/province"
 	"backend-app/internal/modules/master/repository/permission"
 	"backend-app/internal/modules/master/repository/registry"
 	"backend-app/internal/modules/master/repository/role"
@@ -44,6 +46,7 @@ import (
 	gender2 "backend-app/internal/modules/master/service/general/gender"
 	marital_status2 "backend-app/internal/modules/master/service/general/marital_status"
 	religion2 "backend-app/internal/modules/master/service/general/religion"
+	province2 "backend-app/internal/modules/master/service/location/province"
 	permission2 "backend-app/internal/modules/master/service/permission"
 	registry2 "backend-app/internal/modules/master/service/registry"
 	role2 "backend-app/internal/modules/master/service/role"
@@ -84,6 +87,9 @@ func InitializeMasterRouter(cfg *config.Config, db *gorm.DB) *MasterRouter {
 	employeeRepository := employee.NewEmployeeRepository(db)
 	employeeService := employee2.NewEmployeeService(employeeRepository, db)
 	employeeController := employee3.NewEmployeeController(employeeService)
+	provinceRepository := province.NewProvinceRepository(db)
+	provinceService := province2.NewProvinceService(provinceRepository)
+	provinceController := location.NewProvinceController(provinceService)
 	jobCategoryRepository := job_category.NewJobCategoryRepository(db)
 	jobCategoryService := job_category2.NewJobCategoryService(jobCategoryRepository)
 	jobCategoryController := employee3.NewJobCategoryController(jobCategoryService)
@@ -108,6 +114,6 @@ func InitializeMasterRouter(cfg *config.Config, db *gorm.DB) *MasterRouter {
 	bedRepository := bed.NewBedRepository(db)
 	bedService := bed2.NewBedService(bedRepository)
 	bedController := department3.NewBedController(bedService)
-	masterRouter := NewMasterRouter(userController, roleController, registryController, permissionController, religionController, genderController, educationController, bankController, maritalStatusController, employeeController, jobCategoryController, jobTitleController, positionController, employmentStatusController, departmentController, wardController, roomController, bedController)
+	masterRouter := NewMasterRouter(userController, roleController, registryController, permissionController, religionController, genderController, educationController, bankController, maritalStatusController, employeeController, provinceController, jobCategoryController, jobTitleController, positionController, employmentStatusController, departmentController, wardController, roomController, bedController)
 	return masterRouter
 }

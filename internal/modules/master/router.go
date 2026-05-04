@@ -5,6 +5,7 @@ import (
 	"backend-app/internal/modules/master/controller/department"
 	"backend-app/internal/modules/master/controller/employee"
 	"backend-app/internal/modules/master/controller/general"
+	"backend-app/internal/modules/master/controller/location"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,6 +21,7 @@ type MasterRouter struct {
 	bankController             *general.BankController
 	maritalStatusController    *general.MaritalStatusController
 	employeeController         *employee.EmployeeController
+	provinceController         *location.ProvinceController
 	jobCategoryController      *employee.JobCategoryController
 	jobTitleController         *employee.JobTitleController
 	positionController         *employee.PositionController
@@ -41,6 +43,7 @@ func NewMasterRouter(
 	bankController *general.BankController,
 	maritalStatusController *general.MaritalStatusController,
 	employeeController *employee.EmployeeController,
+	provinceController *location.ProvinceController,
 	jobCategoryController *employee.JobCategoryController,
 	jobTitleController *employee.JobTitleController,
 	positionController *employee.PositionController,
@@ -61,6 +64,7 @@ func NewMasterRouter(
 		bankController:             bankController,
 		maritalStatusController:    maritalStatusController,
 		employeeController:         employeeController,
+		provinceController:         provinceController,
 		jobCategoryController:      jobCategoryController,
 		jobTitleController:         jobTitleController,
 		positionController:         positionController,
@@ -162,6 +166,15 @@ func (r *MasterRouter) RegisterRoutes(rg *gin.RouterGroup) {
 			maritalStatuses.POST("", r.maritalStatusController.Create)
 			maritalStatuses.PUT("/:id", r.maritalStatusController.Update)
 			maritalStatuses.DELETE("/:id", r.maritalStatusController.Delete)
+		}
+
+		provinces := master.Group("/location/provinces")
+		{
+			provinces.GET("", r.provinceController.FindAll)
+			provinces.GET("/:id", r.provinceController.FindByID)
+			provinces.POST("", r.provinceController.Create)
+			provinces.PUT("/:id", r.provinceController.Update)
+			provinces.DELETE("/:id", r.provinceController.Delete)
 		}
 
 		jobCategories := master.Group("/employee/job-categories")
