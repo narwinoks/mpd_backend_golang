@@ -2,30 +2,30 @@ package location
 
 import (
 	"backend-app/internal/core/response"
-	req "backend-app/internal/modules/master/request/location/province"
-	"backend-app/internal/modules/master/service/location/province"
+	req "backend-app/internal/modules/master/request/location/city"
+	"backend-app/internal/modules/master/service/location/city"
 	"backend-app/pkg/pagination"
 	"context"
 
 	"github.com/gin-gonic/gin"
 )
 
-type ProvinceController struct {
-	provinceService province.ProvinceService
+type CityController struct {
+	cityService city.CityService
 }
 
-func NewProvinceController(provinceService province.ProvinceService) *ProvinceController {
-	return &ProvinceController{provinceService: provinceService}
+func NewCityController(cityService city.CityService) *CityController {
+	return &CityController{cityService: cityService}
 }
 
-func (h *ProvinceController) FindAll(c *gin.Context) {
+func (h *CityController) FindAll(c *gin.Context) {
 	var paginateReq pagination.BaseRequest
 	if err := c.ShouldBindQuery(&paginateReq); err != nil {
 		c.Error(err)
 		return
 	}
 
-	items, meta, err := h.provinceService.GetAll(c.Request.Context(), paginateReq)
+	items, meta, err := h.cityService.GetAll(c.Request.Context(), paginateReq)
 	if err != nil {
 		c.Error(err)
 		return
@@ -33,10 +33,10 @@ func (h *ProvinceController) FindAll(c *gin.Context) {
 	response.SendSuccess(c, response.Success, items, meta)
 }
 
-func (h *ProvinceController) FindByID(c *gin.Context) {
+func (h *CityController) FindByID(c *gin.Context) {
 	id := c.Param("id")
 
-	res, err := h.provinceService.GetByID(c.Request.Context(), id)
+	res, err := h.cityService.GetByID(c.Request.Context(), id)
 	if err != nil {
 		c.Error(err)
 		return
@@ -44,10 +44,10 @@ func (h *ProvinceController) FindByID(c *gin.Context) {
 	response.SendSuccess(c, response.Success, res)
 }
 
-func (h *ProvinceController) Create(c *gin.Context) {
-	var provinceReq req.CreateProvinceRequest
+func (h *CityController) Create(c *gin.Context) {
+	var cityReq req.CreateCityRequest
 
-	if err := c.ShouldBindJSON(&provinceReq); err != nil {
+	if err := c.ShouldBindJSON(&cityReq); err != nil {
 		c.Error(err)
 		return
 	}
@@ -60,18 +60,18 @@ func (h *ProvinceController) Create(c *gin.Context) {
 		ctx = context.WithValue(ctx, "user_id", userID)
 	}
 
-	res, err := h.provinceService.Create(ctx, provinceReq)
+	res, err := h.cityService.Create(ctx, cityReq)
 	if err != nil {
 		c.Error(err)
 		return
 	}
-	response.SendSuccess(c, response.SuccessCreate, res)
+	response.SendSuccess(c, response.SuccessCreate, map[string]string{"id": res})
 }
 
-func (h *ProvinceController) Update(c *gin.Context) {
+func (h *CityController) Update(c *gin.Context) {
 	id := c.Param("id")
-	var provinceReq req.UpdateProvinceRequest
-	if err := c.ShouldBindJSON(&provinceReq); err != nil {
+	var cityReq req.UpdateCityRequest
+	if err := c.ShouldBindJSON(&cityReq); err != nil {
 		c.Error(err)
 		return
 	}
@@ -84,18 +84,18 @@ func (h *ProvinceController) Update(c *gin.Context) {
 		ctx = context.WithValue(ctx, "user_id", userID)
 	}
 
-	res, err := h.provinceService.Update(ctx, id, provinceReq)
+	res, err := h.cityService.Update(ctx, id, cityReq)
 	if err != nil {
 		c.Error(err)
 		return
 	}
-	response.SendSuccess(c, response.SuccessUpdate, res)
+	response.SendSuccess(c, response.SuccessUpdate, map[string]string{"id": res})
 }
 
-func (h *ProvinceController) Delete(c *gin.Context) {
+func (h *CityController) Delete(c *gin.Context) {
 	id := c.Param("id")
 
-	err := h.provinceService.Delete(c.Request.Context(), id)
+	err := h.cityService.Delete(c.Request.Context(), id)
 	if err != nil {
 		c.Error(err)
 		return

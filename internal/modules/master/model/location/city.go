@@ -6,8 +6,9 @@ import (
 
 type City struct {
 	models.BaseModel
-	ProvinceID uint32 `gorm:"column:province_id" json:"province_id"`
-	City       string `gorm:"column:city;type:varchar(100)" json:"city"`
+	ProvinceID uint32   `gorm:"column:province_id" json:"province_id"`
+	City       string   `gorm:"column:city;type:varchar(100)" json:"city"`
+	Province   Province `gorm:"foreignKey:ProvinceID;references:ID"`
 }
 
 func (City) TableName() string {

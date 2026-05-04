@@ -27,6 +27,7 @@ import (
 	"backend-app/internal/modules/master/repository/general/gender"
 	"backend-app/internal/modules/master/repository/general/marital_status"
 	"backend-app/internal/modules/master/repository/general/religion"
+	"backend-app/internal/modules/master/repository/location/city"
 	"backend-app/internal/modules/master/repository/location/province"
 	"backend-app/internal/modules/master/repository/permission"
 	"backend-app/internal/modules/master/repository/registry"
@@ -46,6 +47,7 @@ import (
 	gender2 "backend-app/internal/modules/master/service/general/gender"
 	marital_status2 "backend-app/internal/modules/master/service/general/marital_status"
 	religion2 "backend-app/internal/modules/master/service/general/religion"
+	city2 "backend-app/internal/modules/master/service/location/city"
 	province2 "backend-app/internal/modules/master/service/location/province"
 	permission2 "backend-app/internal/modules/master/service/permission"
 	registry2 "backend-app/internal/modules/master/service/registry"
@@ -90,6 +92,9 @@ func InitializeMasterRouter(cfg *config.Config, db *gorm.DB) *MasterRouter {
 	provinceRepository := province.NewProvinceRepository(db)
 	provinceService := province2.NewProvinceService(provinceRepository)
 	provinceController := location.NewProvinceController(provinceService)
+	cityRepository := city.NewCityRepository(db)
+	cityService := city2.NewCityService(cityRepository, db)
+	cityController := location.NewCityController(cityService)
 	jobCategoryRepository := job_category.NewJobCategoryRepository(db)
 	jobCategoryService := job_category2.NewJobCategoryService(jobCategoryRepository)
 	jobCategoryController := employee3.NewJobCategoryController(jobCategoryService)
@@ -114,6 +119,6 @@ func InitializeMasterRouter(cfg *config.Config, db *gorm.DB) *MasterRouter {
 	bedRepository := bed.NewBedRepository(db)
 	bedService := bed2.NewBedService(bedRepository)
 	bedController := department3.NewBedController(bedService)
-	masterRouter := NewMasterRouter(userController, roleController, registryController, permissionController, religionController, genderController, educationController, bankController, maritalStatusController, employeeController, provinceController, jobCategoryController, jobTitleController, positionController, employmentStatusController, departmentController, wardController, roomController, bedController)
+	masterRouter := NewMasterRouter(userController, roleController, registryController, permissionController, religionController, genderController, educationController, bankController, maritalStatusController, employeeController, provinceController, cityController, jobCategoryController, jobTitleController, positionController, employmentStatusController, departmentController, wardController, roomController, bedController)
 	return masterRouter
 }
