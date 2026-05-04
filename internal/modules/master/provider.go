@@ -2,10 +2,12 @@ package master
 
 import (
 	"backend-app/internal/modules/master/controller"
+	ctrlApp "backend-app/internal/modules/master/controller/app"
 	ctrlDept "backend-app/internal/modules/master/controller/department"
 	ctrlEmp "backend-app/internal/modules/master/controller/employee"
 	ctrlGen "backend-app/internal/modules/master/controller/general"
 	ctrlLoc "backend-app/internal/modules/master/controller/location"
+	repoAppModule "backend-app/internal/modules/master/repository/app/app_module"
 	repoBed "backend-app/internal/modules/master/repository/department/bed"
 	repoDept "backend-app/internal/modules/master/repository/department/department"
 	repoRoom "backend-app/internal/modules/master/repository/department/room"
@@ -20,14 +22,15 @@ import (
 	repoGender "backend-app/internal/modules/master/repository/general/gender"
 	repoMaritalStatus "backend-app/internal/modules/master/repository/general/marital_status"
 	repoRel "backend-app/internal/modules/master/repository/general/religion"
-	repoProvince "backend-app/internal/modules/master/repository/location/province"
 	repoCity "backend-app/internal/modules/master/repository/location/city"
+	repoProvince "backend-app/internal/modules/master/repository/location/province"
 	repoSubdistrict "backend-app/internal/modules/master/repository/location/subdistrict"
 	repoVillage "backend-app/internal/modules/master/repository/location/village"
 	repoPerm "backend-app/internal/modules/master/repository/permission"
 	repoReg "backend-app/internal/modules/master/repository/registry"
 	repoRole "backend-app/internal/modules/master/repository/role"
 	repoUser "backend-app/internal/modules/master/repository/user"
+	svcAppModule "backend-app/internal/modules/master/service/app/app_module"
 	svcBed "backend-app/internal/modules/master/service/department/bed"
 	svcDept "backend-app/internal/modules/master/service/department/department"
 	svcRoom "backend-app/internal/modules/master/service/department/room"
@@ -42,8 +45,8 @@ import (
 	svcGender "backend-app/internal/modules/master/service/general/gender"
 	svcMaritalStatus "backend-app/internal/modules/master/service/general/marital_status"
 	svcRel "backend-app/internal/modules/master/service/general/religion"
-	svcProvince "backend-app/internal/modules/master/service/location/province"
 	svcCity "backend-app/internal/modules/master/service/location/city"
+	svcProvince "backend-app/internal/modules/master/service/location/province"
 	svcSubdistrict "backend-app/internal/modules/master/service/location/subdistrict"
 	svcVillage "backend-app/internal/modules/master/service/location/village"
 	svcPerm "backend-app/internal/modules/master/service/permission"
@@ -58,6 +61,7 @@ var MasterProviderSet = wire.NewSet(
 	repoUser.NewUserRepository,
 	repoRole.NewRoleRepository,
 	repoReg.NewRegistryRepository,
+	repoAppModule.NewAppModuleRepository,
 	repoPerm.NewPermissionRepository,
 	repoRel.NewReligionRepository,
 	repoGender.NewGenderRepository,
@@ -80,6 +84,7 @@ var MasterProviderSet = wire.NewSet(
 	svcUser.NewUserService,
 	svcRole.NewRoleService,
 	svcReg.NewRegistryService,
+	svcAppModule.NewAppModuleService,
 	svcPerm.NewPermissionService,
 	svcRel.NewReligionService,
 	svcGender.NewGenderService,
@@ -102,6 +107,7 @@ var MasterProviderSet = wire.NewSet(
 	controller.NewUserController,
 	controller.NewRoleController,
 	controller.NewRegistryController,
+	ctrlApp.NewAppModuleController,
 	controller.NewPermissionController,
 	ctrlGen.NewReligionController,
 	ctrlGen.NewGenderController,

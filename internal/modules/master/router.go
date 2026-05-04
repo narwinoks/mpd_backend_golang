@@ -2,6 +2,7 @@ package master
 
 import (
 	"backend-app/internal/modules/master/controller"
+	"backend-app/internal/modules/master/controller/app"
 	"backend-app/internal/modules/master/controller/department"
 	"backend-app/internal/modules/master/controller/employee"
 	"backend-app/internal/modules/master/controller/general"
@@ -14,6 +15,7 @@ type MasterRouter struct {
 	userController             *controller.UserController
 	roleController             *controller.RoleController
 	registryController         *controller.RegistryController
+	appModuleController        *app.AppModuleController
 	permissionController       *controller.PermissionController
 	religionController         *general.ReligionController
 	genderController           *general.GenderController
@@ -39,6 +41,7 @@ func NewMasterRouter(
 	userController *controller.UserController,
 	roleController *controller.RoleController,
 	registryController *controller.RegistryController,
+	appModuleController *app.AppModuleController,
 	permissionController *controller.PermissionController,
 	religionController *general.ReligionController,
 	genderController *general.GenderController,
@@ -63,6 +66,7 @@ func NewMasterRouter(
 		userController:             userController,
 		roleController:             roleController,
 		registryController:         registryController,
+		appModuleController:        appModuleController,
 		permissionController:       permissionController,
 		religionController:         religionController,
 		genderController:           genderController,
@@ -112,6 +116,15 @@ func (r *MasterRouter) RegisterRoutes(rg *gin.RouterGroup) {
 			registries.POST("", r.registryController.Create)
 			registries.PUT("/:id", r.registryController.Update)
 			registries.DELETE("/:id", r.registryController.Delete)
+		}
+
+		appModules := master.Group("/app/app-modules")
+		{
+			appModules.GET("", r.appModuleController.FindAll)
+			appModules.GET("/:id", r.appModuleController.FindByID)
+			appModules.POST("", r.appModuleController.Create)
+			appModules.PUT("/:id", r.appModuleController.Update)
+			appModules.DELETE("/:id", r.appModuleController.Delete)
 		}
 
 		permissions := master.Group("/permissions")

@@ -9,10 +9,12 @@ package master
 import (
 	"backend-app/config"
 	"backend-app/internal/modules/master/controller"
+	"backend-app/internal/modules/master/controller/app"
 	department3 "backend-app/internal/modules/master/controller/department"
 	employee3 "backend-app/internal/modules/master/controller/employee"
 	"backend-app/internal/modules/master/controller/general"
 	"backend-app/internal/modules/master/controller/location"
+	"backend-app/internal/modules/master/repository/app/app_module"
 	"backend-app/internal/modules/master/repository/department/bed"
 	"backend-app/internal/modules/master/repository/department/department"
 	"backend-app/internal/modules/master/repository/department/room"
@@ -35,6 +37,7 @@ import (
 	"backend-app/internal/modules/master/repository/registry"
 	"backend-app/internal/modules/master/repository/role"
 	"backend-app/internal/modules/master/repository/user"
+	app_module2 "backend-app/internal/modules/master/service/app/app_module"
 	bed2 "backend-app/internal/modules/master/service/department/bed"
 	department2 "backend-app/internal/modules/master/service/department/department"
 	room2 "backend-app/internal/modules/master/service/department/room"
@@ -72,6 +75,9 @@ func InitializeMasterRouter(cfg *config.Config, db *gorm.DB) *MasterRouter {
 	registryRepository := registry.NewRegistryRepository(db)
 	registryService := registry2.NewRegistryService(registryRepository)
 	registryController := controller.NewRegistryController(registryService)
+	appModuleRepository := app_module.NewAppModuleRepository(db)
+	appModuleService := app_module2.NewAppModuleService(appModuleRepository)
+	appModuleController := app.NewAppModuleController(appModuleService)
 	permissionRepository := permission.NewPermissionRepository(db)
 	permissionService := permission2.NewPermissionService(permissionRepository)
 	permissionController := controller.NewPermissionController(permissionService)
@@ -129,6 +135,6 @@ func InitializeMasterRouter(cfg *config.Config, db *gorm.DB) *MasterRouter {
 	bedRepository := bed.NewBedRepository(db)
 	bedService := bed2.NewBedService(bedRepository)
 	bedController := department3.NewBedController(bedService)
-	masterRouter := NewMasterRouter(userController, roleController, registryController, permissionController, religionController, genderController, educationController, bankController, maritalStatusController, employeeController, provinceController, cityController, subdistrictController, villageController, jobCategoryController, jobTitleController, positionController, employmentStatusController, departmentController, wardController, roomController, bedController)
+	masterRouter := NewMasterRouter(userController, roleController, registryController, appModuleController, permissionController, religionController, genderController, educationController, bankController, maritalStatusController, employeeController, provinceController, cityController, subdistrictController, villageController, jobCategoryController, jobTitleController, positionController, employmentStatusController, departmentController, wardController, roomController, bedController)
 	return masterRouter
 }
