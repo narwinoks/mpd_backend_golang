@@ -23,6 +23,7 @@ import (
 	repoProvince "backend-app/internal/modules/master/repository/location/province"
 	repoCity "backend-app/internal/modules/master/repository/location/city"
 	repoSubdistrict "backend-app/internal/modules/master/repository/location/subdistrict"
+	repoVillage "backend-app/internal/modules/master/repository/location/village"
 	repoPerm "backend-app/internal/modules/master/repository/permission"
 	repoReg "backend-app/internal/modules/master/repository/registry"
 	repoRole "backend-app/internal/modules/master/repository/role"
@@ -44,6 +45,7 @@ import (
 	svcProvince "backend-app/internal/modules/master/service/location/province"
 	svcCity "backend-app/internal/modules/master/service/location/city"
 	svcSubdistrict "backend-app/internal/modules/master/service/location/subdistrict"
+	svcVillage "backend-app/internal/modules/master/service/location/village"
 	svcPerm "backend-app/internal/modules/master/service/permission"
 	svcReg "backend-app/internal/modules/master/service/registry"
 	svcRole "backend-app/internal/modules/master/service/role"
@@ -74,6 +76,7 @@ var MasterProviderSet = wire.NewSet(
 	repoProvince.NewProvinceRepository,
 	repoCity.NewCityRepository,
 	repoSubdistrict.NewSubdistrictRepository,
+	repoVillage.NewVillageRepository,
 	svcUser.NewUserService,
 	svcRole.NewRoleService,
 	svcReg.NewRegistryService,
@@ -95,6 +98,7 @@ var MasterProviderSet = wire.NewSet(
 	svcProvince.NewProvinceService,
 	svcCity.NewCityService,
 	svcSubdistrict.NewSubdistrictService,
+	svcVillage.NewVillageService,
 	controller.NewUserController,
 	controller.NewRoleController,
 	controller.NewRegistryController,
@@ -116,5 +120,6 @@ var MasterProviderSet = wire.NewSet(
 	ctrlLoc.NewProvinceController,
 	ctrlLoc.NewCityController,
 	ctrlLoc.NewSubdistrictController,
+	ctrlLoc.NewVillageController,
 	NewMasterRouter,
 )

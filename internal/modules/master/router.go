@@ -24,6 +24,7 @@ type MasterRouter struct {
 	provinceController         *location.ProvinceController
 	cityController             *location.CityController
 	subdistrictController      *location.SubdistrictController
+	villageController          *location.VillageController
 	jobCategoryController      *employee.JobCategoryController
 	jobTitleController         *employee.JobTitleController
 	positionController         *employee.PositionController
@@ -48,6 +49,7 @@ func NewMasterRouter(
 	provinceController *location.ProvinceController,
 	cityController *location.CityController,
 	subdistrictController *location.SubdistrictController,
+	villageController *location.VillageController,
 	jobCategoryController *employee.JobCategoryController,
 	jobTitleController *employee.JobTitleController,
 	positionController *employee.PositionController,
@@ -71,6 +73,7 @@ func NewMasterRouter(
 		provinceController:         provinceController,
 		cityController:             cityController,
 		subdistrictController:      subdistrictController,
+		villageController:          villageController,
 		jobCategoryController:      jobCategoryController,
 		jobTitleController:         jobTitleController,
 		positionController:         positionController,
@@ -199,6 +202,15 @@ func (r *MasterRouter) RegisterRoutes(rg *gin.RouterGroup) {
 			subdistricts.POST("", r.subdistrictController.Create)
 			subdistricts.PUT("/:id", r.subdistrictController.Update)
 			subdistricts.DELETE("/:id", r.subdistrictController.Delete)
+		}
+
+		villages := master.Group("/location/villages")
+		{
+			villages.GET("", r.villageController.FindAll)
+			villages.GET("/:id", r.villageController.FindByID)
+			villages.POST("", r.villageController.Create)
+			villages.PUT("/:id", r.villageController.Update)
+			villages.DELETE("/:id", r.villageController.Delete)
 		}
 
 		jobCategories := master.Group("/employee/job-categories")
