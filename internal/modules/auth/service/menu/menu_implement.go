@@ -46,7 +46,6 @@ func (s *menuServiceImpl) GetSideMenu(userID uint32, roleID uint32) ([]res.AppMe
 	return nestedMenus, nil
 }
 
-
 func (s *menuServiceImpl) buildNestedMenus(menus []models.AppMenu, parentID *uint32) []res.AppMenuResponse {
 	var result []res.AppMenuResponse
 

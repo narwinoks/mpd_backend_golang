@@ -6,10 +6,10 @@ import (
 	model "backend-app/internal/modules/master/model/location"
 	repo "backend-app/internal/modules/master/repository/location/village"
 	req "backend-app/internal/modules/master/request/location/village"
-	res "backend-app/internal/modules/master/response/location/village"
 	cityRes "backend-app/internal/modules/master/response/location/city"
 	provinceRes "backend-app/internal/modules/master/response/location/province"
 	subdistrictRes "backend-app/internal/modules/master/response/location/subdistrict"
+	res "backend-app/internal/modules/master/response/location/village"
 	"backend-app/pkg/pagination"
 	"context"
 
@@ -76,6 +76,7 @@ func (s *villageServiceImpl) Create(ctx context.Context, request req.CreateVilla
 		ProvinceID:    provinceID,
 		CityID:        cityID,
 		SubdistrictID: subdistrictID,
+		Code:          request.Code,
 		Village:       request.Village,
 		PostalCode:    request.PostalCode,
 		Longitude:     request.Longitude,
@@ -116,6 +117,7 @@ func (s *villageServiceImpl) Update(ctx context.Context, id string, request req.
 	item.ProvinceID = provinceID
 	item.CityID = cityID
 	item.SubdistrictID = subdistrictID
+	item.Code = request.Code
 	item.Village = request.Village
 	item.PostalCode = request.PostalCode
 	item.Longitude = request.Longitude
@@ -148,6 +150,7 @@ func (s *villageServiceImpl) Delete(ctx context.Context, id string) error {
 func (s *villageServiceImpl) mapToResponse(item *model.Village) *res.VillageResponse {
 	response := &res.VillageResponse{
 		ID:         item.UUID,
+		Code:       item.Code,
 		Village:    item.Village,
 		PostalCode: item.PostalCode,
 		Longitude:  item.Longitude,
@@ -159,6 +162,7 @@ func (s *villageServiceImpl) mapToResponse(item *model.Village) *res.VillageResp
 	if item.Province.ID != 0 {
 		response.Province = &provinceRes.ProvinceResponse{
 			ID:       item.Province.UUID,
+			Code:     item.Province.Code,
 			Province: item.Province.Province,
 		}
 	}
@@ -166,6 +170,7 @@ func (s *villageServiceImpl) mapToResponse(item *model.Village) *res.VillageResp
 	if item.City.ID != 0 {
 		response.City = &cityRes.CityResponse{
 			ID:   item.City.UUID,
+			Code: item.City.Code,
 			City: item.City.City,
 		}
 	}
@@ -173,6 +178,7 @@ func (s *villageServiceImpl) mapToResponse(item *model.Village) *res.VillageResp
 	if item.Subdistrict.ID != 0 {
 		response.Subdistrict = &subdistrictRes.SubdistrictResponse{
 			ID:          item.Subdistrict.UUID,
+			Code:        item.Subdistrict.Code,
 			Subdistrict: item.Subdistrict.Subdistrict,
 		}
 	}

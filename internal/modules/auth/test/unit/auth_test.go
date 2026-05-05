@@ -46,7 +46,7 @@ func TestAuthService_Login(t *testing.T) {
 	t.Run("Happy Path - Success Login", func(t *testing.T) {
 		password := gofakeit.Password(true, true, true, true, false, 12)
 		hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-		
+
 		fakeUser := &models.User{
 			Username: gofakeit.Username(),
 			Email:    gofakeit.Email(),
@@ -90,7 +90,7 @@ func TestAuthService_Login(t *testing.T) {
 	t.Run("Negative - Invalid Password", func(t *testing.T) {
 		password := gofakeit.Password(true, true, true, true, false, 12)
 		hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-		
+
 		fakeUser := &models.User{
 			Username: gofakeit.Username(),
 			Password: string(hashedPassword),

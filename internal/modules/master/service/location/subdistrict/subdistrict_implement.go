@@ -6,9 +6,9 @@ import (
 	model "backend-app/internal/modules/master/model/location"
 	repo "backend-app/internal/modules/master/repository/location/subdistrict"
 	req "backend-app/internal/modules/master/request/location/subdistrict"
-	res "backend-app/internal/modules/master/response/location/subdistrict"
 	cityRes "backend-app/internal/modules/master/response/location/city"
 	provinceRes "backend-app/internal/modules/master/response/location/province"
+	res "backend-app/internal/modules/master/response/location/subdistrict"
 	"backend-app/pkg/pagination"
 	"context"
 
@@ -69,6 +69,7 @@ func (s *subdistrictServiceImpl) Create(ctx context.Context, request req.CreateS
 	item := &model.Subdistrict{
 		ProvinceID:  provinceID,
 		CityID:      cityID,
+		Code:        request.Code,
 		Subdistrict: request.Subdistrict,
 	}
 
@@ -100,6 +101,7 @@ func (s *subdistrictServiceImpl) Update(ctx context.Context, id string, request 
 
 	item.ProvinceID = provinceID
 	item.CityID = cityID
+	item.Code = request.Code
 	item.Subdistrict = request.Subdistrict
 
 	err = s.repo.Update(ctx, item)
@@ -129,6 +131,7 @@ func (s *subdistrictServiceImpl) Delete(ctx context.Context, id string) error {
 func (s *subdistrictServiceImpl) mapToResponse(item *model.Subdistrict) *res.SubdistrictResponse {
 	response := &res.SubdistrictResponse{
 		ID:          item.UUID,
+		Code:        item.Code,
 		Subdistrict: item.Subdistrict,
 		CreatedAt:   item.CreatedAt,
 		UpdatedAt:   item.UpdatedAt,
@@ -137,6 +140,7 @@ func (s *subdistrictServiceImpl) mapToResponse(item *model.Subdistrict) *res.Sub
 	if item.Province.ID != 0 {
 		response.Province = &provinceRes.ProvinceResponse{
 			ID:       item.Province.UUID,
+			Code:     item.Province.Code,
 			Province: item.Province.Province,
 		}
 	}
@@ -144,6 +148,7 @@ func (s *subdistrictServiceImpl) mapToResponse(item *model.Subdistrict) *res.Sub
 	if item.City.ID != 0 {
 		response.City = &cityRes.CityResponse{
 			ID:   item.City.UUID,
+			Code: item.City.Code,
 			City: item.City.City,
 		}
 	}

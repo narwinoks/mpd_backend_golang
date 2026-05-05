@@ -6,6 +6,7 @@ import (
 
 type Province struct {
 	models.BaseModel
+	Code     string `gorm:"column:code;type:varchar(40)" json:"code"`
 	Province string `gorm:"column:province;type:varchar(100)" json:"province"`
 }
 

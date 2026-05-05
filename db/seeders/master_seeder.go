@@ -9,13 +9,13 @@ import (
 )
 
 type MasterState struct {
-	ReligionIDs   map[string]uint32
-	GenderIDs     map[string]uint32
-	MaritalIDs    map[string]uint32
-	EmpStatusIDs  map[string]uint32
-	JobCatIDs     map[string]uint32
-	JobTitleIDs   map[string]uint32
-	PositionIDs   map[string]uint32
+	ReligionIDs  map[string]uint32
+	GenderIDs    map[string]uint32
+	MaritalIDs   map[string]uint32
+	EmpStatusIDs map[string]uint32
+	JobCatIDs    map[string]uint32
+	JobTitleIDs  map[string]uint32
+	PositionIDs  map[string]uint32
 }
 
 func SeedMasters(db *gorm.DB, profileID uint32) (*MasterState, error) {

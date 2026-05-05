@@ -1,11 +1,11 @@
 package general
 
 import (
-	"context"
 	"backend-app/internal/core/response"
 	req "backend-app/internal/modules/master/request/general/bank"
 	"backend-app/internal/modules/master/service/general/bank"
 	"backend-app/pkg/pagination"
+	"context"
 
 	"github.com/gin-gonic/gin"
 )

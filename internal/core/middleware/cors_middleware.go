@@ -11,7 +11,7 @@ import (
 func CORSMiddleware(cfg *config.CORSConfig) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		origin := c.Request.Header.Get("Origin")
-		
+
 		// Check if origin is allowed
 		allowed := false
 		if len(cfg.AllowedOrigins) == 1 && cfg.AllowedOrigins[0] == "*" {

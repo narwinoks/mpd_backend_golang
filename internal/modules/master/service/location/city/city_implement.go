@@ -62,6 +62,7 @@ func (s *cityServiceImpl) Create(ctx context.Context, request req.CreateCityRequ
 
 	city := &model.City{
 		ProvinceID: provinceID,
+		Code:       request.Code,
 		City:       request.City,
 	}
 
@@ -87,6 +88,7 @@ func (s *cityServiceImpl) Update(ctx context.Context, id string, request req.Upd
 	}
 
 	city.ProvinceID = provinceID
+	city.Code = request.Code
 	city.City = request.City
 
 	err = s.repo.Update(ctx, city)
@@ -116,6 +118,7 @@ func (s *cityServiceImpl) Delete(ctx context.Context, id string) error {
 func (s *cityServiceImpl) mapToResponse(c *model.City) *res.CityResponse {
 	response := &res.CityResponse{
 		ID:        c.UUID,
+		Code:      c.Code,
 		City:      c.City,
 		CreatedAt: c.CreatedAt,
 		UpdatedAt: c.UpdatedAt,
@@ -124,6 +127,7 @@ func (s *cityServiceImpl) mapToResponse(c *model.City) *res.CityResponse {
 	if c.Province.ID != 0 {
 		response.Province = &provinceRes.ProvinceResponse{
 			ID:       c.Province.UUID,
+			Code:     c.Province.Code,
 			Province: c.Province.Province,
 		}
 	}

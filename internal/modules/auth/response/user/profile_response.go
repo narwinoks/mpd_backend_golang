@@ -1,11 +1,11 @@
 package user
 
 type ProfileResponse struct {
-	ID        uint32           `json:"id"`
-	Username  string           `json:"username"`
-	Email     string           `json:"email"`
-	Role      RoleInfo         `json:"role"`
-	Employee  *EmployeeInfo    `json:"employee"`
+	ID       uint32        `json:"id"`
+	Username string        `json:"username"`
+	Email    string        `json:"email"`
+	Role     RoleInfo      `json:"role"`
+	Employee *EmployeeInfo `json:"employee"`
 }
 
 type RoleInfo struct {

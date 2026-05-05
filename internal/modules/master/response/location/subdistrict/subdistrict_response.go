@@ -7,10 +7,11 @@ import (
 )
 
 type SubdistrictResponse struct {
-	ID          string                    `json:"id"`
+	ID          string                     `json:"id"`
+	Code        string                     `json:"code"`
 	Province    *province.ProvinceResponse `json:"province,omitempty"`
 	City        *city.CityResponse         `json:"city,omitempty"`
-	Subdistrict string                    `json:"subdistrict"`
-	CreatedAt   time.Time                 `json:"created_at"`
-	UpdatedAt   time.Time                 `json:"updated_at"`
+	Subdistrict string                     `json:"subdistrict"`
+	CreatedAt   time.Time                  `json:"created_at"`
+	UpdatedAt   time.Time                  `json:"updated_at"`
 }

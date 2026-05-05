@@ -109,9 +109,9 @@ func TestNewDatabase(t *testing.T) {
 		// require for terminal failure check (if we can't even setup config)
 		cfg := &config.Config{}
 		require.NotNil(t, cfg)
-		
+
 		cfg.Database.SSLMode = "invalid-mode"
-		
+
 		db, err := NewDatabase(cfg)
 		assert.Error(t, err)
 		assert.Nil(t, db)

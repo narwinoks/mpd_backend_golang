@@ -1,11 +1,11 @@
 package controller
 
 import (
-	"context"
 	"backend-app/internal/core/response"
 	req "backend-app/internal/modules/master/request/permission"
 	"backend-app/internal/modules/master/service/permission"
 	"backend-app/pkg/pagination"
+	"context"
 
 	"github.com/gin-gonic/gin"
 )

@@ -33,6 +33,7 @@ func (s *provinceServiceImpl) GetAll(ctx context.Context, request pagination.Bas
 	for _, p := range provinces {
 		response = append(response, res.ProvinceResponse{
 			ID:        p.UUID,
+			Code:      p.Code,
 			Province:  p.Province,
 			CreatedAt: p.CreatedAt,
 			UpdatedAt: p.UpdatedAt,
@@ -53,6 +54,7 @@ func (s *provinceServiceImpl) GetByID(ctx context.Context, id string) (*res.Prov
 
 	return &res.ProvinceResponse{
 		ID:        province.UUID,
+		Code:      province.Code,
 		Province:  province.Province,
 		CreatedAt: province.CreatedAt,
 		UpdatedAt: province.UpdatedAt,
@@ -61,6 +63,7 @@ func (s *provinceServiceImpl) GetByID(ctx context.Context, id string) (*res.Prov
 
 func (s *provinceServiceImpl) Create(ctx context.Context, request req.CreateProvinceRequest) (*res.ProvinceResponse, error) {
 	province := &model.Province{
+		Code:     request.Code,
 		Province: request.Province,
 	}
 
@@ -72,6 +75,7 @@ func (s *provinceServiceImpl) Create(ctx context.Context, request req.CreateProv
 
 	return &res.ProvinceResponse{
 		ID:        province.UUID,
+		Code:      province.Code,
 		Province:  province.Province,
 		CreatedAt: province.CreatedAt,
 		UpdatedAt: province.UpdatedAt,
@@ -85,6 +89,7 @@ func (s *provinceServiceImpl) Update(ctx context.Context, id string, request req
 		return nil, exception.NewNotFoundError("Data not found")
 	}
 
+	province.Code = request.Code
 	province.Province = request.Province
 
 	err = s.repo.Update(ctx, province)
@@ -95,6 +100,7 @@ func (s *provinceServiceImpl) Update(ctx context.Context, id string, request req
 
 	return &res.ProvinceResponse{
 		ID:        province.UUID,
+		Code:      province.Code,
 		Province:  province.Province,
 		CreatedAt: province.CreatedAt,
 		UpdatedAt: province.UpdatedAt,
