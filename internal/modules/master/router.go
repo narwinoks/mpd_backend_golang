@@ -16,6 +16,7 @@ type MasterRouter struct {
 	roleController             *controller.RoleController
 	registryController         *controller.RegistryController
 	appModuleController        *app.AppModuleController
+	appMenuController          *app.AppMenuController
 	permissionController       *controller.PermissionController
 	religionController         *general.ReligionController
 	genderController           *general.GenderController
@@ -125,6 +126,15 @@ func (r *MasterRouter) RegisterRoutes(rg *gin.RouterGroup) {
 			appModules.POST("", r.appModuleController.Create)
 			appModules.PUT("/:id", r.appModuleController.Update)
 			appModules.DELETE("/:id", r.appModuleController.Delete)
+		}
+
+		appMenus := master.Group("/app/app-menus")
+		{
+			appMenus.GET("", r.appMenuController.FindAll)
+			appMenus.GET("/:id", r.appMenuController.FindByID)
+			appMenus.POST("", r.appMenuController.Create)
+			appMenus.PUT("/:id", r.appMenuController.Update)
+			appMenus.DELETE("/:id", r.appMenuController.Delete)
 		}
 
 		permissions := master.Group("/permissions")

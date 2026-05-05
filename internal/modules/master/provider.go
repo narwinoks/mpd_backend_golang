@@ -31,6 +31,7 @@ import (
 	repoRole "backend-app/internal/modules/master/repository/role"
 	repoUser "backend-app/internal/modules/master/repository/user"
 	svcAppModule "backend-app/internal/modules/master/service/app/app_module"
+	"backend-app/internal/modules/master/service/app_menu"
 	svcBed "backend-app/internal/modules/master/service/department/bed"
 	svcDept "backend-app/internal/modules/master/service/department/department"
 	svcRoom "backend-app/internal/modules/master/service/department/room"
@@ -85,6 +86,7 @@ var MasterProviderSet = wire.NewSet(
 	svcRole.NewRoleService,
 	svcReg.NewRegistryService,
 	svcAppModule.NewAppModuleService,
+	app_menu.NewAppMenuService,
 	svcPerm.NewPermissionService,
 	svcRel.NewReligionService,
 	svcGender.NewGenderService,
