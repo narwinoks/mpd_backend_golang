@@ -27,7 +27,7 @@ func NewCityService(repo repo.CityRepository, db *gorm.DB) CityService {
 	}
 }
 
-func (s *cityServiceImpl) GetAll(ctx context.Context, request pagination.BaseRequest) ([]res.CityResponse, *pagination.Meta, error) {
+func (s *cityServiceImpl) GetAll(ctx context.Context, request req.FindAllRequest) ([]res.CityResponse, *pagination.Meta, error) {
 	cities, total, err := s.repo.FindAll(ctx, request)
 	if err != nil {
 		logrus.Errorf("Failed to fetch cities: %v", err)

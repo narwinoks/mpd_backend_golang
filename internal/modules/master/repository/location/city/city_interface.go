@@ -2,12 +2,12 @@ package city
 
 import (
 	"backend-app/internal/modules/master/model/location"
-	"backend-app/pkg/pagination"
+	req "backend-app/internal/modules/master/request/location/city"
 	"context"
 )
 
 type CityRepository interface {
-	FindAll(ctx context.Context, pagination pagination.BaseRequest) ([]location.City, int64, error)
+	FindAll(ctx context.Context, req req.FindAllRequest) ([]location.City, int64, error)
 	FindByID(ctx context.Context, id uint32) (*location.City, error)
 	Create(ctx context.Context, city *location.City) error
 	Update(ctx context.Context, city *location.City) error

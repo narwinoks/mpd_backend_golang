@@ -4,7 +4,6 @@ import (
 	"backend-app/internal/core/response"
 	req "backend-app/internal/modules/master/request/location/city"
 	"backend-app/internal/modules/master/service/location/city"
-	"backend-app/pkg/pagination"
 	"context"
 
 	"github.com/gin-gonic/gin"
@@ -19,13 +18,13 @@ func NewCityController(cityService city.CityService) *CityController {
 }
 
 func (h *CityController) FindAll(c *gin.Context) {
-	var paginateReq pagination.BaseRequest
-	if err := c.ShouldBindQuery(&paginateReq); err != nil {
+	var findAllReq req.FindAllRequest
+	if err := c.ShouldBindQuery(&findAllReq); err != nil {
 		c.Error(err)
 		return
 	}
 
-	items, meta, err := h.cityService.GetAll(c.Request.Context(), paginateReq)
+	items, meta, err := h.cityService.GetAll(c.Request.Context(), findAllReq)
 	if err != nil {
 		c.Error(err)
 		return

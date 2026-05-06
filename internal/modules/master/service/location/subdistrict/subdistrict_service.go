@@ -8,7 +8,7 @@ import (
 )
 
 type SubdistrictService interface {
-	GetAll(ctx context.Context, request pagination.BaseRequest) ([]res.SubdistrictResponse, *pagination.Meta, error)
+	GetAll(ctx context.Context, request req.FindAllRequest) ([]res.SubdistrictResponse, *pagination.Meta, error)
 	GetByID(ctx context.Context, id string) (*res.SubdistrictResponse, error)
 	Create(ctx context.Context, request req.CreateSubdistrictRequest) (string, error)
 	Update(ctx context.Context, id string, request req.UpdateSubdistrictRequest) (string, error)

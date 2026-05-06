@@ -1,7 +1,9 @@
 package subdistrict
 
 import (
+	"backend-app/internal/core/database"
 	"backend-app/internal/modules/master/model/location"
+	req "backend-app/internal/modules/master/request/location/subdistrict"
 	"backend-app/pkg/pagination"
 	"context"
 
@@ -21,19 +23,27 @@ type SubdistrictWithCount struct {
 	TotalCount int64 `gorm:"column:total_count"`
 }
 
-func (r *subdistrictRepositoryImpl) FindAll(ctx context.Context, req pagination.BaseRequest) ([]location.Subdistrict, int64, error) {
+func (r *subdistrictRepositoryImpl) FindAll(ctx context.Context, req req.FindAllRequest) ([]location.Subdistrict, int64, error) {
 	var results []SubdistrictWithCount
 	var items []location.Subdistrict
 	var total int64
 
-	err := r.db.WithContext(ctx).Model(&location.Subdistrict{}).
+	query := r.db.WithContext(ctx).Model(&location.Subdistrict{}).
 		Preload("Province", func(db *gorm.DB) *gorm.DB {
 			return db.Select("id", "uuid", "province")
 		}).
 		Preload("City", func(db *gorm.DB) *gorm.DB {
 			return db.Select("id", "uuid", "city")
-		}).
-		Scopes(pagination.PaginateScope(req)).
+		})
+
+	if req.CityID != "" {
+		cityID, err := database.ResolveUUID(ctx, r.db, "cities_m", req.CityID)
+		if err == nil {
+			query = query.Where("city_id = ?", cityID)
+		}
+	}
+
+	err := query.Scopes(pagination.PaginateScope(req.BaseRequest)).
 		Scopes(req.SearchScope("subdistrict")).
 		Find(&results).Error
 

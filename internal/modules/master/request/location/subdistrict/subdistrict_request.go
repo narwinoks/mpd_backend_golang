@@ -1,5 +1,12 @@
 package subdistrict
 
+import "backend-app/pkg/pagination"
+
+type FindAllRequest struct {
+	pagination.BaseRequest
+	CityID string `form:"city_id"`
+}
+
 type CreateSubdistrictRequest struct {
 	ProvinceID  string `json:"province_id" binding:"required"`
 	CityID      string `json:"city_id" binding:"required"`

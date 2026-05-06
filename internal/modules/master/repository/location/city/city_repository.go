@@ -1,7 +1,9 @@
 package city
 
 import (
+	"backend-app/internal/core/database"
 	"backend-app/internal/modules/master/model/location"
+	req "backend-app/internal/modules/master/request/location/city"
 	"backend-app/pkg/pagination"
 	"context"
 
@@ -21,14 +23,22 @@ type CityWithCount struct {
 	TotalCount int64 `gorm:"column:total_count"`
 }
 
-func (r *cityRepositoryImpl) FindAll(ctx context.Context, req pagination.BaseRequest) ([]location.City, int64, error) {
+func (r *cityRepositoryImpl) FindAll(ctx context.Context, req req.FindAllRequest) ([]location.City, int64, error) {
 	var results []CityWithCount
 	var cities []location.City
 	var total int64
 
-	err := r.db.WithContext(ctx).Model(&location.City{}).
-		Preload("Province").
-		Scopes(pagination.PaginateScope(req)).
+	query := r.db.WithContext(ctx).Model(&location.City{}).
+		Preload("Province")
+
+	if req.ProvinceID != "" {
+		provinceID, err := database.ResolveUUID(ctx, r.db, "provinces_m", req.ProvinceID)
+		if err == nil {
+			query = query.Where("province_id = ?", provinceID)
+		}
+	}
+
+	err := query.Scopes(pagination.PaginateScope(req.BaseRequest)).
 		Scopes(req.SearchScope("city")).
 		Find(&results).Error
 

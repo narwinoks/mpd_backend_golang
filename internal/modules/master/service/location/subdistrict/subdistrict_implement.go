@@ -28,7 +28,7 @@ func NewSubdistrictService(repo repo.SubdistrictRepository, db *gorm.DB) Subdist
 	}
 }
 
-func (s *subdistrictServiceImpl) GetAll(ctx context.Context, request pagination.BaseRequest) ([]res.SubdistrictResponse, *pagination.Meta, error) {
+func (s *subdistrictServiceImpl) GetAll(ctx context.Context, request req.FindAllRequest) ([]res.SubdistrictResponse, *pagination.Meta, error) {
 	items, total, err := s.repo.FindAll(ctx, request)
 	if err != nil {
 		logrus.Errorf("Failed to fetch subdistricts: %v", err)
