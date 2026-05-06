@@ -19,6 +19,7 @@ type MasterRouter struct {
 	appMenuController          *app.AppMenuController
 	permissionController       *controller.PermissionController
 	religionController         *general.ReligionController
+	fundingSourceController    *general.FundingSourceController
 	genderController           *general.GenderController
 	educationController        *general.EducationController
 	bankController             *general.BankController
@@ -46,6 +47,7 @@ func NewMasterRouter(
 	appMenuController *app.AppMenuController,
 	permissionController *controller.PermissionController,
 	religionController *general.ReligionController,
+	fundingSourceController *general.FundingSourceController,
 	genderController *general.GenderController,
 	educationController *general.EducationController,
 	bankController *general.BankController,
@@ -72,6 +74,7 @@ func NewMasterRouter(
 		appMenuController:          appMenuController,
 		permissionController:       permissionController,
 		religionController:         religionController,
+		fundingSourceController:    fundingSourceController,
 		genderController:           genderController,
 		educationController:        educationController,
 		bankController:             bankController,
@@ -155,6 +158,15 @@ func (r *MasterRouter) RegisterRoutes(rg *gin.RouterGroup) {
 			religions.POST("", r.religionController.Create)
 			religions.PUT("/:id", r.religionController.Update)
 			religions.DELETE("/:id", r.religionController.Delete)
+		}
+
+		fundingSources := master.Group("/general/funding-sources")
+		{
+			fundingSources.GET("", r.fundingSourceController.FindAll)
+			fundingSources.GET("/:id", r.fundingSourceController.FindByID)
+			fundingSources.POST("", r.fundingSourceController.Create)
+			fundingSources.PUT("/:id", r.fundingSourceController.Update)
+			fundingSources.DELETE("/:id", r.fundingSourceController.Delete)
 		}
 
 		genders := master.Group("/general/genders")

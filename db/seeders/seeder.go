@@ -62,6 +62,12 @@ func SeedAll(db *gorm.DB) error {
 			return fmt.Errorf("failed to seed department wards: %w", err)
 		}
 
+		// 7. Funding Sources
+		fmt.Println("Seeding Funding Sources...")
+		if err := SeedFundingSources(tx, profiles.ProfileID); err != nil {
+			return fmt.Errorf("failed to seed funding sources: %w", err)
+		}
+
 		return nil
 	})
 }

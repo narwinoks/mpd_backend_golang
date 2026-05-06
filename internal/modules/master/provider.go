@@ -23,6 +23,7 @@ import (
 	repoGender "backend-app/internal/modules/master/repository/general/gender"
 	repoMaritalStatus "backend-app/internal/modules/master/repository/general/marital_status"
 	repoRel "backend-app/internal/modules/master/repository/general/religion"
+	repoFundingSource "backend-app/internal/modules/master/repository/funding_source"
 	repoCity "backend-app/internal/modules/master/repository/location/city"
 	repoProvince "backend-app/internal/modules/master/repository/location/province"
 	repoSubdistrict "backend-app/internal/modules/master/repository/location/subdistrict"
@@ -47,6 +48,7 @@ import (
 	svcGender "backend-app/internal/modules/master/service/general/gender"
 	svcMaritalStatus "backend-app/internal/modules/master/service/general/marital_status"
 	svcRel "backend-app/internal/modules/master/service/general/religion"
+	svcFundingSource "backend-app/internal/modules/master/service/funding_source"
 	svcCity "backend-app/internal/modules/master/service/location/city"
 	svcProvince "backend-app/internal/modules/master/service/location/province"
 	svcSubdistrict "backend-app/internal/modules/master/service/location/subdistrict"
@@ -67,6 +69,7 @@ var MasterProviderSet = wire.NewSet(
 	repoAppMenu.NewAppMenuRepository,
 	repoPerm.NewPermissionRepository,
 	repoRel.NewReligionRepository,
+	repoFundingSource.NewFundingSourceRepository,
 	repoGender.NewGenderRepository,
 	repoEducation.NewEducationRepository,
 	repoBank.NewBankRepository,
@@ -91,6 +94,7 @@ var MasterProviderSet = wire.NewSet(
 	app_menu.NewAppMenuService,
 	svcPerm.NewPermissionService,
 	svcRel.NewReligionService,
+	svcFundingSource.NewFundingSourceService,
 	svcGender.NewGenderService,
 	svcEducation.NewEducationService,
 	svcBank.NewBankService,
@@ -115,6 +119,7 @@ var MasterProviderSet = wire.NewSet(
 	ctrlApp.NewAppMenuController,
 	controller.NewPermissionController,
 	ctrlGen.NewReligionController,
+	ctrlGen.NewFundingSourceController,
 	ctrlGen.NewGenderController,
 	ctrlGen.NewEducationController,
 	ctrlGen.NewBankController,

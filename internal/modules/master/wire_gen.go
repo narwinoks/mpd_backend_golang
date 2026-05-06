@@ -25,6 +25,7 @@ import (
 	"backend-app/internal/modules/master/repository/employee/job_category"
 	"backend-app/internal/modules/master/repository/employee/job_title"
 	"backend-app/internal/modules/master/repository/employee/position"
+	"backend-app/internal/modules/master/repository/funding_source"
 	"backend-app/internal/modules/master/repository/general/bank"
 	"backend-app/internal/modules/master/repository/general/education"
 	"backend-app/internal/modules/master/repository/general/gender"
@@ -49,6 +50,7 @@ import (
 	job_category2 "backend-app/internal/modules/master/service/employee/job_category"
 	job_title2 "backend-app/internal/modules/master/service/employee/job_title"
 	position2 "backend-app/internal/modules/master/service/employee/position"
+	funding_source2 "backend-app/internal/modules/master/service/funding_source"
 	bank2 "backend-app/internal/modules/master/service/general/bank"
 	education2 "backend-app/internal/modules/master/service/general/education"
 	gender2 "backend-app/internal/modules/master/service/general/gender"
@@ -89,6 +91,9 @@ func InitializeMasterRouter(cfg *config.Config, db *gorm.DB) *MasterRouter {
 	religionRepository := religion.NewReligionRepository(db)
 	religionService := religion2.NewReligionService(religionRepository)
 	religionController := general.NewReligionController(religionService)
+	fundingSourceRepository := funding_source.NewFundingSourceRepository(db)
+	fundingSourceService := funding_source2.NewFundingSourceService(fundingSourceRepository)
+	fundingSourceController := general.NewFundingSourceController(fundingSourceService)
 	genderRepository := gender.NewGenderRepository(db)
 	genderService := gender2.NewGenderService(genderRepository)
 	genderController := general.NewGenderController(genderService)
@@ -140,6 +145,6 @@ func InitializeMasterRouter(cfg *config.Config, db *gorm.DB) *MasterRouter {
 	bedRepository := bed.NewBedRepository(db)
 	bedService := bed2.NewBedService(bedRepository)
 	bedController := department3.NewBedController(bedService)
-	masterRouter := NewMasterRouter(userController, roleController, registryController, appModuleController, appMenuController, permissionController, religionController, genderController, educationController, bankController, maritalStatusController, employeeController, provinceController, cityController, subdistrictController, villageController, jobCategoryController, jobTitleController, positionController, employmentStatusController, departmentController, wardController, roomController, bedController)
+	masterRouter := NewMasterRouter(userController, roleController, registryController, appModuleController, appMenuController, permissionController, religionController, fundingSourceController, genderController, educationController, bankController, maritalStatusController, employeeController, provinceController, cityController, subdistrictController, villageController, jobCategoryController, jobTitleController, positionController, employmentStatusController, departmentController, wardController, roomController, bedController)
 	return masterRouter
 }
