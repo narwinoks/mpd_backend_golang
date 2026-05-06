@@ -8,6 +8,7 @@ import (
 	ctrlGen "backend-app/internal/modules/master/controller/general"
 	ctrlLoc "backend-app/internal/modules/master/controller/location"
 	repoAppModule "backend-app/internal/modules/master/repository/app/app_module"
+	repoAppMenu "backend-app/internal/modules/master/repository/app_menu"
 	repoBed "backend-app/internal/modules/master/repository/department/bed"
 	repoDept "backend-app/internal/modules/master/repository/department/department"
 	repoRoom "backend-app/internal/modules/master/repository/department/room"
@@ -63,6 +64,7 @@ var MasterProviderSet = wire.NewSet(
 	repoRole.NewRoleRepository,
 	repoReg.NewRegistryRepository,
 	repoAppModule.NewAppModuleRepository,
+	repoAppMenu.NewAppMenuRepository,
 	repoPerm.NewPermissionRepository,
 	repoRel.NewReligionRepository,
 	repoGender.NewGenderRepository,
@@ -110,6 +112,7 @@ var MasterProviderSet = wire.NewSet(
 	controller.NewRoleController,
 	controller.NewRegistryController,
 	ctrlApp.NewAppModuleController,
+	ctrlApp.NewAppMenuController,
 	controller.NewPermissionController,
 	ctrlGen.NewReligionController,
 	ctrlGen.NewGenderController,

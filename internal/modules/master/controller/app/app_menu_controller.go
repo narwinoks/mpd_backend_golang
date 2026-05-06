@@ -4,7 +4,6 @@ import (
 	"backend-app/internal/core/response"
 	req "backend-app/internal/modules/master/request/app_menu"
 	"backend-app/internal/modules/master/service/app_menu"
-	"backend-app/pkg/pagination"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,7 +17,7 @@ func NewAppMenuController(service app_menu.AppMenuService) *AppMenuController {
 }
 
 func (h *AppMenuController) FindAll(c *gin.Context) {
-	var paginateReq pagination.BaseRequest
+	var paginateReq req.AppMenuFilterRequest
 	if err := c.ShouldBindQuery(&paginateReq); err != nil {
 		c.Error(err)
 		return

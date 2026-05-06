@@ -6,6 +6,7 @@ import (
 	repoAppModule "backend-app/internal/modules/master/repository/app/app_module"
 	repo "backend-app/internal/modules/master/repository/app_menu"
 	req "backend-app/internal/modules/master/request/app_menu"
+	resAppModule "backend-app/internal/modules/master/response/app/app_module"
 	res "backend-app/internal/modules/master/response/app_menu"
 	"backend-app/pkg/pagination"
 	"context"
@@ -25,7 +26,7 @@ func NewAppMenuService(repo repo.AppMenuRepository, appModuleRepo repoAppModule.
 	}
 }
 
-func (s *appMenuServiceImpl) GetAll(ctx context.Context, request pagination.BaseRequest) ([]res.AppMenuResponse, *pagination.Meta, error) {
+func (s *appMenuServiceImpl) GetAll(ctx context.Context, request req.AppMenuFilterRequest) ([]res.AppMenuResponse, *pagination.Meta, error) {
 	items, total, err := s.repo.FindAll(ctx, request)
 	if err != nil {
 		logrus.Errorf("Failed to fetch app menus: %v", err)
@@ -34,29 +35,7 @@ func (s *appMenuServiceImpl) GetAll(ctx context.Context, request pagination.Base
 
 	var response []res.AppMenuResponse
 	for _, item := range items {
-		var parentUUID *string
-		var parentName *string
-		if item.Parent != nil {
-			parentUUID = &item.Parent.UUID
-			parentName = &item.Parent.Name
-		}
-
-		response = append(response, res.AppMenuResponse{
-			ID:            item.UUID,
-			AppModuleID:   item.AppModule.UUID,
-			AppModuleName: item.AppModule.Name,
-			ParentID:      parentUUID,
-			ParentName:    parentName,
-			Code:          item.Code,
-			Name:          item.Name,
-			Path:          item.Path,
-			Description:   item.Description,
-			Icon:          item.Icon,
-			SortOrder:     item.SortOrder,
-			IsActive:      item.IsActive,
-			CreatedAt:     item.CreatedAt,
-			UpdatedAt:     item.UpdatedAt,
-		})
+		response = append(response, s.mapToResponse(item))
 	}
 
 	meta := pagination.BuildMeta(total, request.Page, request.Paginate, len(response))
@@ -71,19 +50,55 @@ func (s *appMenuServiceImpl) GetByID(ctx context.Context, id string) (*res.AppMe
 		return nil, exception.NewNotFoundError("Data not found")
 	}
 
+	response := s.mapToResponse(*item)
+	return &response, nil
+}
+
+func (s *appMenuServiceImpl) mapToResponse(item models.AppMenu) res.AppMenuResponse {
 	var parentUUID *string
 	var parentName *string
+	var parentObj *res.AppMenuResponse
+
 	if item.Parent != nil {
 		parentUUID = &item.Parent.UUID
 		parentName = &item.Parent.Name
+		parentObj = &res.AppMenuResponse{
+			ID:          item.Parent.ID,
+			UUID:        item.Parent.UUID,
+			Code:        item.Parent.Code,
+			Name:        item.Parent.Name,
+			Path:        item.Parent.Path,
+			Description: item.Parent.Description,
+			Icon:        item.Parent.Icon,
+			SortOrder:   item.Parent.SortOrder,
+			IsActive:    item.Parent.IsActive,
+			CreatedAt:   item.Parent.CreatedAt,
+			UpdatedAt:   item.Parent.UpdatedAt,
+		}
 	}
 
-	return &res.AppMenuResponse{
-		ID:            item.UUID,
+	var appModuleObj *resAppModule.AppModuleResponse
+	if item.AppModule.ID != 0 {
+		appModuleObj = &resAppModule.AppModuleResponse{
+			ID:        item.AppModule.UUID,
+			Code:      item.AppModule.Code,
+			Name:      item.AppModule.Name,
+			Category:  item.AppModule.Category,
+			SortOrder: item.AppModule.SortOrder,
+			CreatedAt: item.AppModule.CreatedAt,
+			UpdatedAt: item.AppModule.UpdatedAt,
+		}
+	}
+
+	response := res.AppMenuResponse{
+		ID:            item.ID,
+		UUID:          item.UUID,
 		AppModuleID:   item.AppModule.UUID,
 		AppModuleName: item.AppModule.Name,
+		AppModule:     appModuleObj,
 		ParentID:      parentUUID,
 		ParentName:    parentName,
+		Parent:        parentObj,
 		Code:          item.Code,
 		Name:          item.Name,
 		Path:          item.Path,
@@ -93,7 +108,17 @@ func (s *appMenuServiceImpl) GetByID(ctx context.Context, id string) (*res.AppMe
 		IsActive:      item.IsActive,
 		CreatedAt:     item.CreatedAt,
 		UpdatedAt:     item.UpdatedAt,
-	}, nil
+	}
+
+	if len(item.SubMenus) > 0 {
+		response.Children = make([]*res.AppMenuResponse, 0)
+		for _, sub := range item.SubMenus {
+			mappedSub := s.mapToResponse(*sub)
+			response.Children = append(response.Children, &mappedSub)
+		}
+	}
+
+	return response
 }
 
 func (s *appMenuServiceImpl) Create(ctx context.Context, request req.CreateAppMenuRequest) (string, error) {

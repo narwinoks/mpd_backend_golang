@@ -15,6 +15,7 @@ import (
 	"backend-app/internal/modules/master/controller/general"
 	"backend-app/internal/modules/master/controller/location"
 	"backend-app/internal/modules/master/repository/app/app_module"
+	"backend-app/internal/modules/master/repository/app_menu"
 	"backend-app/internal/modules/master/repository/department/bed"
 	"backend-app/internal/modules/master/repository/department/department"
 	"backend-app/internal/modules/master/repository/department/room"
@@ -38,6 +39,7 @@ import (
 	"backend-app/internal/modules/master/repository/role"
 	"backend-app/internal/modules/master/repository/user"
 	app_module2 "backend-app/internal/modules/master/service/app/app_module"
+	app_menu2 "backend-app/internal/modules/master/service/app_menu"
 	bed2 "backend-app/internal/modules/master/service/department/bed"
 	department2 "backend-app/internal/modules/master/service/department/department"
 	room2 "backend-app/internal/modules/master/service/department/room"
@@ -78,6 +80,9 @@ func InitializeMasterRouter(cfg *config.Config, db *gorm.DB) *MasterRouter {
 	appModuleRepository := app_module.NewAppModuleRepository(db)
 	appModuleService := app_module2.NewAppModuleService(appModuleRepository)
 	appModuleController := app.NewAppModuleController(appModuleService)
+	appMenuRepository := app_menu.NewAppMenuRepository(db)
+	appMenuService := app_menu2.NewAppMenuService(appMenuRepository, appModuleRepository)
+	appMenuController := app.NewAppMenuController(appMenuService)
 	permissionRepository := permission.NewPermissionRepository(db)
 	permissionService := permission2.NewPermissionService(permissionRepository)
 	permissionController := controller.NewPermissionController(permissionService)
@@ -135,6 +140,6 @@ func InitializeMasterRouter(cfg *config.Config, db *gorm.DB) *MasterRouter {
 	bedRepository := bed.NewBedRepository(db)
 	bedService := bed2.NewBedService(bedRepository)
 	bedController := department3.NewBedController(bedService)
-	masterRouter := NewMasterRouter(userController, roleController, registryController, appModuleController, permissionController, religionController, genderController, educationController, bankController, maritalStatusController, employeeController, provinceController, cityController, subdistrictController, villageController, jobCategoryController, jobTitleController, positionController, employmentStatusController, departmentController, wardController, roomController, bedController)
+	masterRouter := NewMasterRouter(userController, roleController, registryController, appModuleController, appMenuController, permissionController, religionController, genderController, educationController, bankController, maritalStatusController, employeeController, provinceController, cityController, subdistrictController, villageController, jobCategoryController, jobTitleController, positionController, employmentStatusController, departmentController, wardController, roomController, bedController)
 	return masterRouter
 }

@@ -1,5 +1,13 @@
 package app_menu
 
+import "backend-app/pkg/pagination"
+
+type AppMenuFilterRequest struct {
+	pagination.BaseRequest
+	AppModuleID string `form:"app_module_id"`
+	HeadID      string `form:"head_id"`
+}
+
 type CreateAppMenuRequest struct {
 	AppModuleID string  `json:"app_module_id" binding:"required"`
 	ParentID    *string `json:"parent_id"`

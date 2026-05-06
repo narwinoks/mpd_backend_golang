@@ -8,7 +8,7 @@ import (
 )
 
 type AppMenuService interface {
-	GetAll(ctx context.Context, request pagination.BaseRequest) ([]res.AppMenuResponse, *pagination.Meta, error)
+	GetAll(ctx context.Context, request req.AppMenuFilterRequest) ([]res.AppMenuResponse, *pagination.Meta, error)
 	GetByID(ctx context.Context, id string) (*res.AppMenuResponse, error)
 	Create(ctx context.Context, request req.CreateAppMenuRequest) (string, error)
 	Update(ctx context.Context, id string, request req.UpdateAppMenuRequest) (string, error)
